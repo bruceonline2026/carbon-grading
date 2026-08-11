@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>加入我们 - 企业绿色评级系统</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .input-row{transition:all .2s}
+    .input-row:focus-within{border-color:#1A5319;box-shadow:0 0 0 2px rgba(26,83,25,.12)}
+    button:disabled{opacity:.6;cursor:not-allowed}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .spinner{animation:spin 1s linear infinite}
+  </style>
+</head>
+<body class="bg-gradient-to-br from-white via-gray-50 to-gray-100 min-h-screen">
+  <div class="max-w-2xl mx-auto px-4 py-12">
+    <a href="/" class="inline-flex items-center gap-1 text-gray-500 hover:text-[#1A5319] mb-8">&larr; 返回首页</a>
+
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 space-y-6">
+      <div>
+        <h1 class="text-2xl font-bold text-[#003366]">合作伙伴申请</h1>
+        <p class="text-gray-500 mt-1">提交申请后，我们将在 3 个工作日内与您联系。</p>
+      </div>
+
+      <form id="joinForm" class="space-y-5">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">企业名称 <span class="text-red-500">*</span></label>
+          <input type="text" name="EnterpriseName" required placeholder="请输入企业全称"
+                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">统一社会信用代码 <span class="text-red-500">*</span></label>
+          <input type="text" name="EnterpriseCode" required placeholder="请输入18位统一社会信用代码"
+                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">联系人 <span class="text-red-500">*</span></label>
+            <input type="text" name="Linkman" required placeholder="姓名"
+                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">职务</label>
+            <input type="text" name="Post" placeholder="如：总经理、合伙人"
+                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">联系电话 <span class="text-red-500">*</span></label>
+            <input type="tel" name="Tel" required placeholder="手机号码"
+                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">电子邮箱 <span class="text-red-500">*</span></label>
+            <input type="email" name="EMail" required placeholder="business@example.com"
+                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">机构类型 <span class="text-red-500">*</span></label>
+            <select name="OrgType" required
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none bg-white">
+              <option value="">请选择机构类型</option>
+              <option>咨询服务类机构</option><option>金融机构</option><option>投资机构</option>
+              <option>行业组织与研究机构</option><option>其他机构</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">所在大区 <span class="text-red-500">*</span></label>
+            <select name="Region" required
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none bg-white">
+              <option value="">请选择所在大区</option>
+              <option>华北地区</option><option>华东地区</option><option>华南地区</option><option>华中地区</option>
+              <option>西南地区</option><option>西北地区</option><option>东北地区</option><option>港澳台地区</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">企业官网</label>
+          <input type="url" name="OfficiaWebsiteUrl" placeholder="https://www.example.com"
+                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">补充说明</label>
+          <textarea name="Memo" rows="3" placeholder="如有其他需要说明的事项，请在此填写..."
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none"></textarea>
+        </div>
+        <div class="bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-xl p-4">
+          <p class="text-[#003366] text-sm">提示：提交申请后，我们的商务团队将在 3 个工作日内与您联系，请保持电话畅通。</p>
+        </div>
+        <button type="submit" id="submitBtn"
+                class="w-full bg-[#1A5319] hover:bg-[#144013] text-white py-3.5 rounded-xl font-semibold transition-all">
+          提交申请
+        </button>
+      </form>
+
+      <div id="successMsg" class="hidden text-center py-12">
+        <div class="w-16 h-16 rounded-full bg-[#1A5319]/10 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-[#1A5319]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h2 class="text-xl font-bold text-[#003366] mb-2">申请已成功提交</h2>
+        <p class="text-gray-500 mb-6">感谢您的信任与支持，我们将尽快与您联系。</p>
+        <button onclick="location.reload()" class="text-sm text-[#1A5319] underline">重新填写</button>
+      </div>
+      <div id="failMsg" class="hidden text-center py-8">
+        <p class="text-red-500 mb-4" id="failText">提交失败，请稍后重试。</p>
+        <button onclick="location.reload()" class="text-sm text-[#1A5319] underline">重新填写</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/config.js"></script>
+  <script>
+    var form=document.getElementById("joinForm");
+    var btn=document.getElementById("submitBtn");
+    var sc=document.getElementById("successMsg");
+    var fl=document.getElementById("failMsg");
+    var ft=document.getElementById("failText");
+
+    form.addEventListener("submit",function(e){
+      e.preventDefault();
+      btn.disabled=true;
+      btn.innerHTML='<span class="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full spinner mr-2"></span>提交中...';
+      fl.classList.add("hidden");
+      sc.classList.add("hidden");
+
+      var fd=new FormData(form);
+      var base=(window.__apiUrl__||window.__entUrl__||"https://uat-enterprise.carbon-grading.com").replace(/\/+$/,"");
+      var url=base+"/DataServices/OfficialWebsiteAPI/CooperationApplication";
+
+      fetch(url,{method:"POST",body:fd})
+        .then(function(r){return r.text()})
+        .then(function(t){
+          btn.disabled=false;
+          btn.innerHTML="提交申请";
+          var d={};
+          try{d=JSON.parse(t)}catch(e){}
+          if(d&&d.Message){
+            fl.classList.remove("hidden");
+            ft.textContent=d.Message;
+          }else{
+            sc.classList.remove("hidden");
+            form.classList.add("hidden");
+          }
+        })
+        .catch(function(err){
+          btn.disabled=false;
+          btn.innerHTML="提交申请";
+          fl.classList.remove("hidden");
+          ft.textContent="网络错误，请稍后重试。";
+        });
+    });
+  </script>
+</body>
+</html>
