@@ -11,148 +11,289 @@
     button:disabled{opacity:.6;cursor:not-allowed}
     @keyframes spin{to{transform:rotate(360deg)}}
     .spinner{animation:spin 1s linear infinite}
+    /* 顶部菜单项 hover */
+    .nav-item{position:relative}
+    .nav-item:hover{color:#1A5319}
+    .nav-item.active{color:#1A5319;font-weight:600}
+    .nav-item.active::after{
+      content:"";position:absolute;left:0;right:0;bottom:-22px;height:2px;background:#1A5319;border-radius:2px;
+    }
   </style>
 </head>
-<body class="bg-gradient-to-br from-white via-gray-50 to-gray-100 min-h-screen">
-  <div class="max-w-2xl mx-auto px-4 py-12">
-    <a href="/" class="inline-flex items-center gap-1 text-gray-500 hover:text-[#1A5319] mb-8">&larr; 返回首页</a>
+<body class="bg-gray-50 min-h-screen">
 
-    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 space-y-6">
-      <div>
-        <h1 class="text-2xl font-bold text-[#003366]">合作伙伴申请</h1>
-        <p class="text-gray-500 mt-1">提交申请后，我们将在 3 个工作日内与您联系。</p>
-      </div>
+  <!-- ============== 顶部导航栏 ============== -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="" id="nav-home-logo" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[#1A5319] to-[#0d3a14] flex items-center justify-center">
+          <span class="text-white font-bold text-base">绿评</span>
+        </div>
+        <div class="leading-tight">
+          <div class="text-[#003366] font-bold text-base">企业绿色评级系统</div>
+          <div class="text-[11px] text-gray-500">专业可持续发展评估店</div>
+        </div>
+      </a>
+      <!-- 菜单（与官网首页顶部完全一致：8 项 + 登录） -->
+      <nav class="hidden md:flex items-center gap-7 text-sm text-gray-700">
+        <a href="" id="nav-home"           class="nav-item">首页</a>
+        <a href="" id="nav-financial"      class="nav-item">金融市场</a>
+        <a href="" id="nav-certificate"    class="nav-item">证书查询</a>
+        <a href="" id="nav-indicators"     class="nav-item">指标申报</a>
+        <a href="" id="nav-process"        class="nav-item">流程</a>
+        <a href="" id="nav-services"       class="nav-item">服务</a>
+        <a href="" id="nav-partners"       class="nav-item">合作伙伴</a>
+        <a href="./"                       class="nav-item active">加入我们</a>
+      </nav>
+      <!-- 登录（外链到企业后台） -->
+      <a href="" id="nav-login"
+         class="bg-[#D4AF37] hover:bg-[#bf9a2f] text-white px-5 py-2 rounded-lg font-semibold text-sm transition-colors">
+        登录
+      </a>
+    </div>
+  </header>
 
-      <form id="joinForm" class="space-y-5">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">企业名称 <span class="text-red-500">*</span></label>
-          <input type="text" name="EnterpriseName" required placeholder="请输入企业全称"
-                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">统一社会信用代码 <span class="text-red-500">*</span></label>
-          <input type="text" name="EnterpriseCode" required placeholder="请输入18位统一社会信用代码"
-                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">联系人 <span class="text-red-500">*</span></label>
-            <input type="text" name="Linkman" required placeholder="姓名"
-                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">职务</label>
-            <input type="text" name="Post" placeholder="如：总经理、合伙人"
-                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
-          </div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">联系电话 <span class="text-red-500">*</span></label>
-            <input type="tel" name="Tel" required placeholder="手机号码"
-                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">电子邮箱 <span class="text-red-500">*</span></label>
-            <input type="email" name="EMail" required placeholder="business@example.com"
-                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
-          </div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">机构类型 <span class="text-red-500">*</span></label>
-            <select name="OrgType" required
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none bg-white">
-              <option value="">请选择机构类型</option>
-              <option>咨询服务类机构</option><option>金融机构</option><option>投资机构</option>
-              <option>行业组织与研究机构</option><option>其他机构</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">所在大区 <span class="text-red-500">*</span></label>
-            <select name="Region" required
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none bg-white">
-              <option value="">请选择所在大区</option>
-              <option>华北地区</option><option>华东地区</option><option>华南地区</option><option>华中地区</option>
-              <option>西南地区</option><option>西北地区</option><option>东北地区</option><option>港澳台地区</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">企业官网</label>
-          <input type="url" name="OfficiaWebsiteUrl" placeholder="https://www.example.com"
-                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">补充说明</label>
-          <textarea name="Memo" rows="3" placeholder="如有其他需要说明的事项，请在此填写..."
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none"></textarea>
+  <!-- ============== 主区 ============== -->
+  <main class="max-w-6xl mx-auto px-6 py-10">
+
+    <!-- 标题区 -->
+    <div class="text-center mb-10">
+      <span class="inline-flex items-center gap-1 bg-[#1A5319]/8 text-[#1A5319] text-xs px-3 py-1 rounded-full mb-3"
+            style="background:rgba(26,83,25,.08)">
+        <span class="text-[#1A5319]">▸</span> 合作伙伴招募
+      </span>
+      <h1 class="text-3xl md:text-4xl font-bold text-[#003366] mb-3">加入我们</h1>
+      <p class="text-gray-600 max-w-2xl mx-auto leading-relaxed">
+        诚邀具备专业资质的咨询机构、金融机构及行业伙伴共同参与企业绿色评级生态建设，携手推动绿色金融与可持续发展融合落地。
+      </p>
+    </div>
+
+    <!-- 左右两栏 -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- ============== 左侧：合作伙伴权益 + 提示 ============== -->
+      <aside class="lg:col-span-1 space-y-4">
+        <div class="bg-gradient-to-br from-[#0d3a14] to-[#1A5319] rounded-2xl p-6 text-white shadow-lg">
+          <h2 class="text-xl font-bold mb-5">合作伙伴权益</h2>
+          <ul class="space-y-5">
+            <li class="flex items-start gap-3">
+              <span class="text-2xl leading-none mt-0.5">🏅</span>
+              <div>
+                <div class="font-semibold text-[15px]">官方授权资质</div>
+                <div class="text-xs text-green-100/80 mt-1">获颁授权代理机构证书及授权牌匾</div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-2xl leading-none mt-0.5">📊</span>
+              <div>
+                <div class="font-semibold text-[15px]">专属数据平台</div>
+                <div class="text-xs text-green-100/80 mt-1">独立机构管理后台与客户数据看板</div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-2xl leading-none mt-0.5">📚</span>
+              <div>
+                <div class="font-semibold text-[15px]">专业培训支持</div>
+                <div class="text-xs text-green-100/80 mt-1">定期开展绿色评级与绿色金融培训</div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-2xl leading-none mt-0.5">🤝</span>
+              <div>
+                <div class="font-semibold text-[15px]">业务协同资源</div>
+                <div class="text-xs text-green-100/80 mt-1">实现客户共享、产品共创、数据互通</div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-2xl leading-none mt-0.5">📣</span>
+              <div>
+                <div class="font-semibold text-[15px]">市场推广赋能</div>
+                <div class="text-xs text-green-100/80 mt-1">联合品牌宣传与行业峰会参展资格</div>
+              </div>
+            </li>
+          </ul>
         </div>
         <div class="bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-xl p-4">
-          <p class="text-[#003366] text-sm">提示：提交申请后，我们的商务团队将在 3 个工作日内与您联系，请保持电话畅通。</p>
+          <p class="text-[#003366] text-sm">
+            <span class="font-semibold">提示：</span>提交申请后，我们的商务团队将在
+            <span class="font-semibold">3 个工作日内</span>与您联系，请保持电话畅通。
+          </p>
         </div>
-        <button type="submit" id="submitBtn"
-                class="w-full bg-[#1A5319] hover:bg-[#144013] text-white py-3.5 rounded-xl font-semibold transition-all">
-          提交申请
-        </button>
-      </form>
+      </aside>
 
-      <div id="successMsg" class="hidden text-center py-12">
-        <div class="w-16 h-16 rounded-full bg-[#1A5319]/10 flex items-center justify-center mx-auto mb-4">
-          <svg class="w-8 h-8 text-[#1A5319]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+      <!-- ============== 右侧：申请表 ============== -->
+      <section class="lg:col-span-2">
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8">
+          <div class="mb-5">
+            <h2 class="text-xl font-bold text-[#003366]">合作申请表</h2>
+            <p class="text-xs text-gray-500 mt-1">标有 <span class="text-red-500">*</span> 为必填项</p>
+          </div>
+          <form id="joinForm" class="space-y-5">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">企业名称 <span class="text-red-500">*</span></label>
+              <input type="text" name="EnterpriseName" required placeholder="请输入企业全称"
+                     class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">统一社会信用代码 <span class="text-red-500">*</span></label>
+              <input type="text" name="EnterpriseCode" required placeholder="请输入18位统一社会信用代码"
+                     class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">联系人 <span class="text-red-500">*</span></label>
+                <input type="text" name="Linkman" required placeholder="姓名"
+                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">职务</label>
+                <input type="text" name="Post" placeholder="如：总经理、合伙人"
+                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">联系电话 <span class="text-red-500">*</span></label>
+                <input type="tel" name="Tel" required placeholder="手机号码"
+                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">电子邮箱 <span class="text-red-500">*</span></label>
+                <input type="email" name="EMail" required placeholder="business@example.com"
+                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">机构类型 <span class="text-red-500">*</span></label>
+                <select name="OrgType" required
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none bg-white">
+                  <option value="">请选择机构类型</option>
+                  <option>咨询服务类机构</option><option>金融机构</option><option>投资机构</option>
+                  <option>行业组织与研究机构</option><option>其他机构</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">所在大区 <span class="text-red-500">*</span></label>
+                <select name="Region" required
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none bg-white">
+                  <option value="">请选择所在大区</option>
+                  <option>华北地区</option><option>华东地区</option><option>华南地区</option><option>华中地区</option>
+                  <option>西南地区</option><option>西北地区</option><option>东北地区</option><option>港澳台地区</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">企业官网</label>
+              <input type="url" name="OfficiaWebsiteUrl" placeholder="https://www.example.com"
+                     class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">补充说明</label>
+              <textarea name="Memo" rows="3" placeholder="如有其他需要说明的事项，请在此填写..."
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg input-row outline-none"></textarea>
+            </div>
+            <button type="submit" id="submitBtn"
+                    class="w-full bg-[#1A5319] hover:bg-[#144013] text-white py-3.5 rounded-xl font-semibold transition-all">
+              提交申请
+            </button>
+          </form>
+
+          <div id="successMsg" class="hidden text-center py-12">
+            <div class="w-16 h-16 rounded-full bg-[#1A5319]/10 flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-[#1A5319]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <h2 class="text-xl font-bold text-[#003366] mb-2">申请已成功提交</h2>
+            <p class="text-gray-500 mb-6">感谢您的信任与支持，我们将尽快与您联系。</p>
+            <button onclick="location.reload()" class="text-sm text-[#1A5319] underline">重新填写</button>
+          </div>
+          <div id="failMsg" class="hidden text-center py-8">
+            <p class="text-red-500 mb-4" id="failText">提交失败，请稍后重试。</p>
+            <button onclick="location.reload()" class="text-sm text-[#1A5319] underline">重新填写</button>
+          </div>
         </div>
-        <h2 class="text-xl font-bold text-[#003366] mb-2">申请已成功提交</h2>
-        <p class="text-gray-500 mb-6">感谢您的信任与支持，我们将尽快与您联系。</p>
-        <button onclick="location.reload()" class="text-sm text-[#1A5319] underline">重新填写</button>
-      </div>
-      <div id="failMsg" class="hidden text-center py-8">
-        <p class="text-red-500 mb-4" id="failText">提交失败，请稍后重试。</p>
-        <button onclick="location.reload()" class="text-sm text-[#1A5319] underline">重新填写</button>
-      </div>
+      </section>
     </div>
-  </div>
 
+    <!-- 返回首页 -->
+    <div class="mt-8 text-center">
+      <a href="../" class="inline-flex items-center gap-1 text-gray-500 hover:text-[#1A5319] text-sm">
+        ← 返回首页
+      </a>
+    </div>
+  </main>
+
+  <!-- ============== 配置 & 行为脚本 ============== -->
   <script src="../assets/config.js"></script>
   <script>
-    var form=document.getElementById("joinForm");
-    var btn=document.getElementById("submitBtn");
-    var sc=document.getElementById("successMsg");
-    var fl=document.getElementById("failMsg");
-    var ft=document.getElementById("failText");
+    /* 动态配置：菜单跳转与外链（严格与官网首页一致：8 项 + 登录） */
+    (function(){
+      var cg  = (window.__cgUrl__  || "https://uat.carbon-grading.com").replace(/\/+$/, "");
+      var ent = (window.__entUrl__ || window.__apiUrl__ || "https://uat-enterprise.carbon-grading.com").replace(/\/+$/, "");
+      // 官网首页用的是混合路由：pathname 路由 + hash 路由
+      var links = {
+        "nav-home-logo":   cg + "/#home",                 // Logo → 官网首页
+        "nav-home":        cg + "/#home",                 // 首页（hash）
+        "nav-financial":   cg + "/financial-supermarket", // 金融市场（pathname）
+        "nav-certificate": cg + "/certificate-query",     // 证书查询（pathname）
+        "nav-indicators":  ent + "/App/Enterprise",       // 指标申报（外链企业后台）
+        "nav-process":     cg + "/#process",              // 流程（hash）
+        "nav-services":    cg + "/#services",             // 服务（hash）
+        "nav-partners":    cg + "/#partners",             // 合作伙伴（hash）
+        "nav-login":       ent + "/App/Enterprise"        // 登录（外链企业后台）
+      };
+      for (var id in links) {
+        var el = document.getElementById(id);
+        if (el) el.href = links[id];
+      }
+    })();
 
-    form.addEventListener("submit",function(e){
-      e.preventDefault();
-      btn.disabled=true;
-      btn.innerHTML='<span class="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full spinner mr-2"></span>提交中...';
-      fl.classList.add("hidden");
-      sc.classList.add("hidden");
+    /* 表单提交 */
+    (function(){
+      var form = document.getElementById("joinForm");
+      var btn  = document.getElementById("submitBtn");
+      var sc   = document.getElementById("successMsg");
+      var fl   = document.getElementById("failMsg");
+      var ft   = document.getElementById("failText");
+      var formArea = form;
 
-      var fd=new FormData(form);
-      var base=(window.__apiUrl__||window.__entUrl__||"https://uat-enterprise.carbon-grading.com").replace(/\/+$/,"");
-      var url=base+"/DataServices/OfficialWebsiteAPI/CooperationApplication";
+      form.addEventListener("submit", function(e){
+        e.preventDefault();
+        btn.disabled = true;
+        btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full spinner mr-2"></span>提交中...';
+        fl.classList.add("hidden");
+        sc.classList.add("hidden");
 
-      fetch(url,{method:"POST",body:fd})
-        .then(function(r){return r.text()})
-        .then(function(t){
-          btn.disabled=false;
-          btn.innerHTML="提交申请";
-          var d={};
-          try{d=JSON.parse(t)}catch(e){}
-          if(d&&d.Message){
+        var fd = new FormData(form);
+        var base = (window.__apiUrl__ || window.__entUrl__ || "https://uat-enterprise.carbon-grading.com").replace(/\/+$/, "");
+        var url = base + "/DataServices/OfficialWebsiteAPI/CooperationApplication";
+
+        fetch(url, {method:"POST", body:fd})
+          .then(function(r){ return r.text(); })
+          .then(function(t){
+            btn.disabled = false;
+            btn.innerHTML = "提交申请";
+            var d = {};
+            try { d = JSON.parse(t); } catch(_){}
+            if (d && d.Message) {
+              fl.classList.remove("hidden");
+              ft.textContent = d.Message;
+            } else {
+              sc.classList.remove("hidden");
+              formArea.classList.add("hidden");
+            }
+          })
+          .catch(function(err){
+            btn.disabled = false;
+            btn.innerHTML = "提交申请";
             fl.classList.remove("hidden");
-            ft.textContent=d.Message;
-          }else{
-            sc.classList.remove("hidden");
-            form.classList.add("hidden");
-          }
-        })
-        .catch(function(err){
-          btn.disabled=false;
-          btn.innerHTML="提交申请";
-          fl.classList.remove("hidden");
-          ft.textContent="网络错误，请稍后重试。";
-        });
-    });
+            ft.textContent = "网络错误，请稍后重试。";
+          });
+      });
+    })();
   </script>
 </body>
 </html>
