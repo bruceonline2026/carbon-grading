@@ -11,19 +11,19 @@
     button:disabled{opacity:.6;cursor:not-allowed}
     @keyframes spin{to{transform:rotate(360deg)}}
     .spinner{animation:spin 1s linear infinite}
-    /* 顶部菜单项 hover */
-    .nav-item{position:relative}
-    .nav-item:hover{color:#1A5319}
-    .nav-item.active{color:#1A5319;font-weight:600}
+    /* 顶部菜单项（深蓝 hero 风格，与官网首页一致） */
+    .nav-item{position:relative;color:#fff}
+    .nav-item:hover{color:#fff;opacity:.85}
+    .nav-item.active{color:#fff;font-weight:600;opacity:1}
     .nav-item.active::after{
-      content:"";position:absolute;left:0;right:0;bottom:-22px;height:2px;background:#1A5319;border-radius:2px;
+      content:"";position:absolute;left:0;right:0;bottom:-22px;height:2px;background:#fff;border-radius:2px;
     }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-  <!-- ============== 顶部导航栏 ============== -->
-  <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+  <!-- ============== 顶部导航栏（深蓝 hero 风格，与官网首页一致） ============== -->
+  <header class="bg-gradient-to-r from-[#003366] to-[#0a2a52] sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
       <!-- Logo -->
       <a href="" id="nav-home-logo" class="flex items-center gap-3">
@@ -31,12 +31,12 @@
           <span class="text-white font-bold text-base">绿评</span>
         </div>
         <div class="leading-tight">
-          <div class="text-[#003366] font-bold text-base">企业绿色评级系统</div>
-          <div class="text-[11px] text-gray-500">专业可持续发展评估店</div>
+          <div class="text-white font-bold text-base">企业绿色评级系统</div>
+          <div class="text-[11px] text-blue-200/80">专业可持续发展评估店</div>
         </div>
       </a>
-      <!-- 菜单（与官网首页顶部完全一致：8 项 + 登录） -->
-      <nav class="hidden md:flex items-center gap-7 text-sm text-gray-700">
+      <!-- 菜单（与官网首页顶部完全一致：8 项 + 登录，白色文字浮于深蓝背景） -->
+      <nav class="hidden md:flex items-center gap-7 text-sm">
         <a href="" id="nav-home"           class="nav-item">首页</a>
         <a href="" id="nav-financial"      class="nav-item">金融市场</a>
         <a href="" id="nav-certificate"    class="nav-item">证书查询</a>
@@ -46,9 +46,9 @@
         <a href="" id="nav-partners"       class="nav-item">合作伙伴</a>
         <a href="./"                       class="nav-item active">加入我们</a>
       </nav>
-      <!-- 登录（外链到企业后台，与官网首页同款深蓝按钮） -->
+      <!-- 登录（外链到企业后台，白底深蓝字，深蓝 hero 上的标准 CTA） -->
       <a href="" id="nav-login"
-         class="bg-[#003366] hover:bg-[#002855] text-white px-5 py-2 rounded-lg font-semibold text-sm transition-colors">
+         class="bg-white hover:bg-blue-50 text-[#003366] px-5 py-2 rounded-lg font-semibold text-sm transition-colors shadow-sm">
         登录
       </a>
     </div>
