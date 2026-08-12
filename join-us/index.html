@@ -35,8 +35,8 @@
             </div>
           </a>
         </div>
-        <!-- 菜单（与官网首页完全一致：8 项、gap-8、text-gray-700/font-medium；ml-auto 推到右侧靠右对齐，与首页视觉一致） -->
-        <nav class="hidden md:flex items-center gap-8 ml-auto">
+        <!-- 菜单（与官网首页完全一致：8 项、gap-8、text-gray-700/font-medium；自然 flex 留出与登录按钮的距离） -->
+        <nav class="hidden md:flex items-center gap-8">
           <a href="" id="nav-home"           class="nav-item">首页</a>
           <a href="" id="nav-financial"      class="nav-item">金融市场</a>
           <a href="" id="nav-certificate"    class="nav-item">证书查询</a>
@@ -70,65 +70,64 @@
       </p>
     </div>
 
-    <!-- 左右两栏 -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- 左右两栏（严格按原型：grid-cols-1 lg:grid-cols-5 gap-10 items-start，左 col-span-2 + 右 col-span-3） -->
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">
 
       <!-- ============== 左侧：合作伙伴权益 + 提示 ============== -->
-      <aside class="lg:col-span-1 space-y-4">
-        <div class="bg-gradient-to-br from-[#0d3a14] to-[#1A5319] rounded-2xl p-6 text-white shadow-lg">
-          <h2 class="text-xl font-bold mb-5">合作伙伴权益</h2>
-          <ul class="space-y-5">
+      <aside class="lg:col-span-2 space-y-6">
+        <div class="bg-gradient-to-br from-[#1A5319] to-[#003366] rounded-2xl p-8 text-white shadow-lg">
+          <h2 class="text-xl font-bold mb-6">合作伙伴权益</h2>
+          <ul class="space-y-4">
             <li class="flex items-start gap-3">
-              <span class="text-2xl leading-none mt-0.5">🏅</span>
+              <span class="text-2xl mt-0.5">🏅</span>
               <div>
-                <div class="font-semibold text-[15px]">官方授权资质</div>
-                <div class="text-xs text-green-100/80 mt-1">获颁授权代理机构证书及授权牌匾</div>
+                <div class="font-semibold text-sm">官方授权资质</div>
+                <div class="text-xs text-white/70 mt-0.5">获颁授权代理机构证书及授权牌匾</div>
               </div>
             </li>
             <li class="flex items-start gap-3">
-              <span class="text-2xl leading-none mt-0.5">📊</span>
+              <span class="text-2xl mt-0.5">📊</span>
               <div>
-                <div class="font-semibold text-[15px]">专属数据平台</div>
-                <div class="text-xs text-green-100/80 mt-1">独立机构管理后台与客户数据看板</div>
+                <div class="font-semibold text-sm">专属数据平台</div>
+                <div class="text-xs text-white/70 mt-0.5">独立机构管理后台与客户数据看板</div>
               </div>
             </li>
             <li class="flex items-start gap-3">
-              <span class="text-2xl leading-none mt-0.5">📚</span>
+              <span class="text-2xl mt-0.5">🎓</span>
               <div>
-                <div class="font-semibold text-[15px]">专业培训支持</div>
-                <div class="text-xs text-green-100/80 mt-1">定期开展绿色评级与绿色金融培训</div>
+                <div class="font-semibold text-sm">专业培训支持</div>
+                <div class="text-xs text-white/70 mt-0.5">定期开展绿色评级与绿色金融培训</div>
               </div>
             </li>
             <li class="flex items-start gap-3">
-              <span class="text-2xl leading-none mt-0.5">🤝</span>
+              <span class="text-2xl mt-0.5">💼</span>
               <div>
-                <div class="font-semibold text-[15px]">业务协同资源</div>
-                <div class="text-xs text-green-100/80 mt-1">实现客户共享、产品共创、数据互通</div>
+                <div class="font-semibold text-sm">业务协同资源</div>
+                <div class="text-xs text-white/70 mt-0.5">实现客户共享、产品共生、数据互通</div>
               </div>
             </li>
             <li class="flex items-start gap-3">
-              <span class="text-2xl leading-none mt-0.5">📣</span>
+              <span class="text-2xl mt-0.5">📈</span>
               <div>
-                <div class="font-semibold text-[15px]">市场推广赋能</div>
-                <div class="text-xs text-green-100/80 mt-1">联合品牌宣传与行业峰会参展资格</div>
+                <div class="font-semibold text-sm">市场推广赋能</div>
+                <div class="text-xs text-white/70 mt-0.5">联合品牌宣传与行业峰会参展资格</div>
               </div>
             </li>
           </ul>
         </div>
-        <div class="bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-xl p-4">
-          <p class="text-[#003366] text-sm">
-            <span class="font-semibold">提示：</span>提交申请后，我们的商务团队将在
-            <span class="font-semibold">3 个工作日内</span>与您联系，请保持电话畅通。
+        <div class="bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-xl p-5">
+          <p class="text-[#003366] text-sm leading-relaxed">
+            <span class="font-semibold">提示：</span>提交申请后，我们的商务团队将在<span class="font-semibold text-[#1A5319]"> 3 个工作日</span>内与您联系，请保持电话畅通。
           </p>
         </div>
       </aside>
 
       <!-- ============== 右侧：申请表 ============== -->
-      <section class="lg:col-span-2">
-        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8">
+      <section class="lg:col-span-3">
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
           <div class="mb-5">
-            <h2 class="text-xl font-bold text-[#003366]">合作申请表</h2>
-            <p class="text-xs text-gray-500 mt-1">标有 <span class="text-red-500">*</span> 为必填项</p>
+            <h2 class="text-lg font-bold text-[#003366]">合作申请表</h2>
+            <p class="text-xs text-gray-400 mt-1">标有 <span class="text-red-500">*</span> 为必填项</p>
           </div>
           <form id="joinForm" class="space-y-5">
             <div>
