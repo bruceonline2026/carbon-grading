@@ -19,35 +19,39 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-  <!-- ============== 顶部导航栏（白色导航条，与官网首页一致） ============== -->
-  <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-      <!-- Logo：圆形框（rounded-full）+ 绿→深蓝渐变，与首页一致 -->
-      <a href="" id="nav-home-logo" class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#1A5319] to-[#003366] flex items-center justify-center">
-          <span class="text-white font-bold text-base">绿评</span>
+  <!-- ============== 顶部导航栏（严格按官网首页代码逐字对齐：bg-white、h-20、w-12 h-12 Logo、text-xl、gap-8） ============== -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo：48px 圆形 + 绿→深蓝渐变，与首页一致 -->
+        <div class="flex items-center gap-3">
+          <a href="" id="nav-home-logo" class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#1A5319] to-[#003366] flex items-center justify-center">
+              <span class="text-white font-bold text-xl">绿评</span>
+            </div>
+            <div>
+              <div class="font-bold text-xl text-[#003366]">企业绿色评级系统</div>
+              <div class="text-xs text-gray-500">专业可持续发展评估</div>
+            </div>
+          </a>
         </div>
-        <div class="leading-tight">
-          <div class="text-[#003366] font-bold text-base">企业绿色评级系统</div>
-          <div class="text-[11px] text-gray-500">专业可持续发展评估店</div>
-        </div>
-      </a>
-      <!-- 菜单（与官网首页完全一致：8 项、text-base 16px、font-medium、gray-700） -->
-      <nav class="hidden md:flex items-center gap-6 text-base">
-        <a href="" id="nav-home"           class="nav-item">首页</a>
-        <a href="" id="nav-financial"      class="nav-item">金融市场</a>
-        <a href="" id="nav-certificate"    class="nav-item">证书查询</a>
-        <a href="" id="nav-indicators"     class="nav-item">指标申报</a>
-        <a href="" id="nav-process"        class="nav-item">流程</a>
-        <a href="" id="nav-services"       class="nav-item">服务</a>
-        <a href="" id="nav-partners"       class="nav-item">合作伙伴</a>
-        <a href="./"                       class="nav-item active">加入我们</a>
-      </nav>
-      <!-- 登录（与官网首页完全一致：金色底 #D4AF37 + 深蓝字 #003366） -->
-      <a href="" id="nav-login"
-         class="bg-[#D4AF37] hover:bg-[#C19B2E] text-[#003366] px-6 py-2.5 rounded-lg font-semibold transition-colors">
-        登录
-      </a>
+        <!-- 菜单（与官网首页完全一致：8 项、gap-8、text-gray-700/font-medium） -->
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="" id="nav-home"           class="nav-item">首页</a>
+          <a href="" id="nav-financial"      class="nav-item">金融市场</a>
+          <a href="" id="nav-certificate"    class="nav-item">证书查询</a>
+          <a href="" id="nav-indicators"     class="nav-item">指标申报</a>
+          <a href="" id="nav-process"        class="nav-item">流程</a>
+          <a href="" id="nav-services"       class="nav-item">服务</a>
+          <a href="" id="nav-partners"       class="nav-item">合作伙伴</a>
+          <a href="./"                       class="nav-item active">加入我们</a>
+        </nav>
+        <!-- 登录（与官网首页完全一致：金色底 #D4AF37 + 深蓝字 #003366） -->
+        <a href="" id="nav-login"
+           class="bg-[#D4AF37] hover:bg-[#C19B2E] text-[#003366] px-6 py-2.5 rounded-lg font-semibold transition-colors">
+          登录
+        </a>
+      </div>
     </div>
   </header>
 
