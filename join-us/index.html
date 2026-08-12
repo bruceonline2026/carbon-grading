@@ -35,22 +35,23 @@
             </div>
           </a>
         </div>
-        <!-- 菜单（与官网首页完全一致：8 项、gap-8、text-gray-700/font-medium；自然 flex 留出与登录按钮的距离） -->
+        <!-- 菜单（严格按原型：10 项含能源计算，登录按钮作为 nav 最后一项，与首页/原型结构完全一致） -->
         <nav class="hidden md:flex items-center gap-8">
           <a href="" id="nav-home"           class="nav-item">首页</a>
           <a href="" id="nav-financial"      class="nav-item">金融市场</a>
           <a href="" id="nav-certificate"    class="nav-item">证书查询</a>
           <a href="" id="nav-indicators"     class="nav-item">指标申报</a>
+          <a href="" id="nav-energy"         class="nav-item">能源计算</a>
           <a href="" id="nav-process"        class="nav-item">流程</a>
           <a href="" id="nav-services"       class="nav-item">服务</a>
           <a href="" id="nav-partners"       class="nav-item">合作伙伴</a>
           <a href="./"                       class="nav-item active">加入我们</a>
+          <!-- 登录按钮作为 nav 最后一项（与原型一致），金底深蓝字 -->
+          <a href="" id="nav-login"
+             class="bg-[#D4AF37] hover:bg-[#C19B2E] text-[#003366] px-6 py-2.5 rounded-lg font-semibold transition-colors">
+            登录
+          </a>
         </nav>
-        <!-- 登录（与官网首页完全一致：金色底 #D4AF37 + 深蓝字 #003366） -->
-        <a href="" id="nav-login"
-           class="bg-[#D4AF37] hover:bg-[#C19B2E] text-[#003366] px-6 py-2.5 rounded-lg font-semibold transition-colors">
-          登录
-        </a>
       </div>
     </div>
   </header>
@@ -240,6 +241,7 @@
         "nav-financial":   cg + "/financial-supermarket", // 金融市场（pathname）
         "nav-certificate": cg + "/certificate-query",     // 证书查询（pathname）
         "nav-indicators":  ent + "/App/Enterprise",       // 指标申报（外链企业后台）
+        "nav-energy":      cg + "/energy-calculation",    // 能源计算（pathname，与原型一致）
         "nav-process":     cg + "/#process",              // 流程（hash）
         "nav-services":    cg + "/#services",             // 服务（hash）
         "nav-partners":    cg + "/#partners",             // 合作伙伴（hash）
