@@ -20,20 +20,20 @@ def ssh_exec(cmd, timeout=60):
         c.close()
 
 def ssh_run_ps(ps_script, timeout=120):
-    """通过 SFTP 上传 ps1 并执行（避免 base64 + PowerShell 的 $ 与反斜杠转义问题）"""
+    """通过 SFTP 上传 ps1 并执行（加 UTF-8 BOM，PowerShell 5.1 才能正确解析中文）"""
     c = paramiko.SSHClient()
     c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     c.connect(HOST, port=PORT, username=USER, password=PASS, timeout=15)
     try:
-        # SFTP 上传 ps1 到远程
+        # SFTP 上传 ps1 到远程（加 BOM）
         sftp = c.open_sftp()
         local_tmp = "/tmp/_ssh_run.ps1"
-        with open(local_tmp, 'w', encoding='utf-8') as f:
+        with open(local_tmp, 'w', encoding='utf-8-sig', newline='\r\n') as f:
             f.write(ps_script)
         remote_ps1 = r"C:\Users\Public\_ssh_run.ps1"
         sftp.put(local_tmp, remote_ps1)
         sftp.close()
-        # 执行（UTF-8 with BOM 让 PowerShell 正确识别中文）
+        # 执行
         cmd = f'powershell -NoProfile -ExecutionPolicy Bypass -File {remote_ps1}\r'
         si, so, se = c.exec_command(cmd, timeout=timeout)
         out = so.read().decode('utf-8', errors='replace')
