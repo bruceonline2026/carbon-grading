@@ -1,14 +1,17 @@
 # ============================================================
-# 企业绿色评级系统 · Docker Compose
+# 企业绿色评级系统 · Docker Compose（HTTPS）
 # 用法：
 #   docker compose up -d --build        # 构建并启动
 #   docker compose down                 # 停止
 #   docker compose logs -f web          # 查看日志
-# 说明：
-#   - 端口映射 8080:80，浏览器访问 http://<服务器IP>:8080
-#   - 如需挂载静态目录（不重建镜像即可更新），取消 volume 注释：
-#       volumes:
-#         - ./site:/usr/share/nginx/html:ro
+#
+# HTTPS 证书（必须准备，两种方式二选一）：
+#   方式A：宿主机证书目录挂载（推荐，证书更新无需重建镜像）
+#     将 server.crt / server.key 放入 ./certs/ 目录，保持下方 volume 即可
+#   方式B：无证书时用自签名脚本生成（仅测试）：
+#     bash deploy/scripts/gen-selfsigned-cert.sh ./certs
+#
+# 访问：https://<服务器IP>:443
 # ============================================================
 
 services:
@@ -20,6 +23,9 @@ services:
     container_name: carbon-grading
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "80:80"        # HTTP → 301 跳转 HTTPS
+      - "443:443"      # HTTPS 主入口
+    volumes:
+      - ./certs:/etc/nginx/certs:ro        # ★ 证书目录挂载（server.crt / server.key）
     # volumes:
     #   - ../site:/usr/share/nginx/html:ro   # 可选：挂载方式更新站点
