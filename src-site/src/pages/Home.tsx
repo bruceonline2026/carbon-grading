@@ -1,7 +1,33 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ArrowRight, Leaf } from "lucide-react";
+import ProductCard from "../components/ProductCard";
+import { fetchFinancialProducts, mapProduct, type FinancialProduct } from "../api/client";
 
-/** 首页（阶段A 骨架：hero + 核心入口 + 金融区块占位） */
+/** 首页绿色金融兜底数据（原产物 O2 组件兜底逐字迁移） */
+const HOME_FALLBACK: FinancialProduct[] = [
+  { id: 1, title: "碳挂钩贷款", bank: "绿色资本银行", rate: "年利率 3.2%", rateLabel: "", type: "", requiredRating: "", amount: "", description: "利率与碳减排目标挂钩。实现可持续发展目标的同时，享受更优惠的贷款条件。", features: ["最高1000万元", "5-10年期限", "绩效浮动利率"], iconType: "default", color: "#1A5319", hot: false },
+  { id: 2, title: "可持续增长信贷", bank: "生态金融合作伙伴", rate: "年利率 3.8%", rateLabel: "", type: "", requiredRating: "", amount: "", description: "为投资可再生能源和绿色基础设施的企业提供灵活的信贷额度，支持企业绿色转型。", features: ["循环信贷", "快速审批", "税收优惠"], iconType: "default", color: "#003366", hot: false },
+  { id: 3, title: "ESG卓越融资", bank: "未来地球银行", rate: "年利率 2.9%", rateLabel: "", type: "", requiredRating: "", amount: "", description: "为顶级绿色企业提供优惠利率。AAA评级企业专享，享受行业最低利率和优先服务。", features: ["最低利率", "优先服务", "全球通用"], iconType: "supply-chain", color: "#1A5319", hot: false },
+];
+
+/** 首页（阶段B：hero + 核心入口 + 绿色金融服务区块） */
 export default function Home() {
+  const [products, setProducts] = useState<FinancialProduct[]>(HOME_FALLBACK);
+
+  useEffect(() => {
+    let alive = true;
+    // 首页产品（官网首页显示=true 且 非本周推荐）
+    fetchFinancialProducts({ 官网首页显示: "true", 官网本周热门推荐: "false" }).then((raw) => {
+      if (!alive) return;
+      const mapped = raw.map(mapProduct);
+      if (mapped.length) setProducts(mapped.slice(0, 3));
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
   return (
     <div>
       {/* Hero 区（深蓝 banner，与官网视觉一致） */}
@@ -53,22 +79,47 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 金融产品区块（阶段B 接入 FinancialProductLookup 接口） */}
-      <section className="max-w-7xl mx-auto px-6 pb-14">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-[#003366]">本周推荐产品</h2>
-            <Link to="/financial-supermarket" className="text-sm text-[#1A5319] hover:underline">
-              查看全部 →
+      {/* 绿色金融服务（接口 + 兜底） */}
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-[#003366] mb-4">绿色金融服务</h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">来自合作金融机构的专属融资产品</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {products.map((p) => (
+              <ProductCard key={p.id} p={p} />
+            ))}
+          </div>
+          <div className="text-center mt-10">
+            <Link
+              to="/financial-supermarket"
+              className="inline-flex items-center gap-2 bg-[#1A5319] hover:bg-[#0d3a14] text-white px-8 py-3.5 rounded-lg font-semibold transition-colors"
+            >
+              进入金融超市 <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="border border-gray-100 rounded-xl p-5 bg-gray-50/50">
-                <div className="h-4 w-24 bg-gray-200 rounded mb-3" />
-                <div className="h-3 w-full bg-gray-100 rounded" />
-                <div className="h-3 w-2/3 bg-gray-100 rounded mt-2" />
-                <div className="mt-4 text-xs text-gray-400">产品数据 · 阶段B接入接口</div>
+        </div>
+      </section>
+
+      {/* 服务流程简述 */}
+      <section className="max-w-7xl mx-auto px-6 pb-16">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+          <h2 className="text-xl font-bold text-[#003366] mb-6">为什么选择我们</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { icon: "标准", title: "权威标准接入", desc: "评级标准以国家发改委和生态环境部公布的核算方法与报告指南为核心" },
+              { icon: "智能", title: "AI智能评估", desc: "70%定量指标 + 30%定性评估，确保评级的专业性和准确性" },
+              { icon: "对接", title: "金融场景对接", desc: "直接对接绿色信贷、绿色债券等金融产品场景" },
+            ].map((f) => (
+              <div key={f.title} className="flex items-start gap-4">
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#1A5319] to-[#003366] flex items-center justify-center shrink-0">
+                  <Leaf className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-800 mb-1">{f.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{f.desc}</p>
+                </div>
               </div>
             ))}
           </div>

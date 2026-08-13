@@ -21,6 +21,7 @@ export default function Footer() {
               <Link to="/certificate-query" className="block hover:text-white">证书查询</Link>
               <Link to="/financial-supermarket" className="block hover:text-white">金融市场</Link>
               <Link to="/join-us" className="block hover:text-white">加入我们</Link>
+              <Link to="/about" className="block hover:text-white">关于我们</Link>
             </div>
             <div className="space-y-2">
               <div className="text-white font-semibold mb-1">企业服务</div>

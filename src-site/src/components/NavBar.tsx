@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { enterpriseUrl } from "../config";
 
-/** 导航菜单项（与官网一致：8 项，无"能源计算"；无当前页高亮，hover 变色） */
+/** 导航菜单项（与官网一致 8 项；无当前页高亮，hover 变色） */
 const NAV_ITEMS: { label: string; to?: string; external?: string }[] = [
   { label: "首页", to: "/" },
   { label: "金融市场", to: "/financial-supermarket" },

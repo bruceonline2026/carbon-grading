@@ -7,6 +7,7 @@ import Process from "./pages/Process";
 import Services from "./pages/Services";
 import Partners from "./pages/Partners";
 import JoinUs from "./pages/JoinUs";
+import About from "./pages/About";
 
 /**
  * 路由表（data router 模式）
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
       { path: "services", element: <Services /> },
       { path: "partners", element: <Partners /> },
       { path: "join-us", element: <JoinUs /> },
+      { path: "about", element: <About /> },
     ],
   },
 ]);

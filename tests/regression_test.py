@@ -230,14 +230,68 @@ def t_online():
     if not base:
         return
     print(f"\n[+11] 线上路由可达性: {base}")
-    for path in ["/", "/financial-supermarket", "/certificate-query", "/join-us/"]:
+    # 自签名/测试证书环境下忽略证书校验
+    import ssl
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    for path in ["/", "/financial-supermarket", "/certificate-query", "/join-us"]:
         try:
             req = urllib.request.Request(base + path, method="GET",
                                          headers={"User-Agent": "curl/8"})
-            with urllib.request.urlopen(req, timeout=15) as r:
+            with urllib.request.urlopen(req, timeout=15, context=ctx) as r:
                 check(f"路由可达 {path}", r.status == 200, f"HTTP {r.status}")
         except Exception as e:
             check(f"路由可达 {path}", False, str(e)[:100])
+
+
+# ============================================================
+# 12. 源码工程基线（阶段A/B 迁移后新增）
+# ============================================================
+def t_src_site():
+    print("\n[+12] 源码工程基线（src-site/）")
+    pkg = read("src-site/package.json")
+    check("src-site/package.json 存在", pkg is not None)
+    if pkg:
+        check("工程依赖 react/react-router-dom/vite/tailwind",
+              all(x in pkg for x in ['"react"', '"react-router-dom"', '"vite"', '"tailwindcss"']))
+
+    app = read("src-site/src/App.tsx")
+    check("App.tsx 存在且含 8 条路由", app is not None and all(
+        f'path: "{p}"' in app for p in
+        ["financial-supermarket", "certificate-query", "process", "services", "partners", "join-us", "about"]))
+
+    slider = read("src-site/src/components/SliderCaptcha.tsx")
+    check("滑块算法常量（240/200/10）", slider is not None and all(
+        x in slider for x in ["TRACK_PX = 240", "TARGET_PX = 200", "TOLERANCE = 10"]))
+
+    client = read("src-site/src/api/client.ts")
+    check("API 封装含 4 接口", client is not None and all(
+        x in client for x in ["CertificateLookup", "FinancialProductLookup",
+                              "FinancialProductTypeList", "CooperationApplication"]))
+    if client:
+        check("API 走 __entUrl__ 企业后台（无硬编码 carbon-grading）",
+              "API_BASE = `${entUrl}/DataServices" in client)
+
+    fm = read("src-site/src/pages/FinancialMarket.tsx")
+    check("金融超市 12 兜底产品", fm is not None and
+          all(x in fm for x in ["碳挂钩贷款", "可持续增长信贷", "ESG卓越融资", "节能改造专项贷",
+                                "绿色债券发行支持", "碳中和转型基金", "绿能抵押融资", "小微绿色直通车",
+                                "碳减排支持工具对接贷款", "可再生能源项目债券", "ESG主题投资基金", "绿色供应链金融"]))
+
+    joinus = read("src-site/src/pages/JoinUs.tsx")
+    check("合作申请 10 字段", joinus is not None and all(
+        x in joinus for x in ["EnterpriseName", "EnterpriseCode", "Linkman", "Post",
+                              "Tel", "EMail", "OfficiaWebsiteUrl", "Memo", "OrgType", "Region"]))
+
+    cfg = read("src-site/public/config.js")
+    check("public/config.js 含双域名配置", cfg is not None and "__entUrl__" in cfg and "__cgUrl__" in cfg)
+
+    navbar = read("src-site/src/components/NavBar.tsx")
+    if navbar:
+        for kw in ["首页", "金融市场", "证书查询", "指标申报", "流程", "服务", "合作伙伴", "加入我们"]:
+            check(f"NavBar 含菜单项: {kw}", kw in navbar)
+        check("NavBar 无能源计算", "能源计算" not in navbar)
 
 
 # ============================================================
@@ -258,6 +312,7 @@ def main():
     t_styles()
     t_webconfig()
     t_deploy()
+    t_src_site()
     t_online()
 
     passed = sum(1 for _, ok, _ in results if ok)
