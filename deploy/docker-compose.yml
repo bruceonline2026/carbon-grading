@@ -1,0 +1,25 @@
+# ============================================================
+# 企业绿色评级系统 · Docker Compose
+# 用法：
+#   docker compose up -d --build        # 构建并启动
+#   docker compose down                 # 停止
+#   docker compose logs -f web          # 查看日志
+# 说明：
+#   - 端口映射 8080:80，浏览器访问 http://<服务器IP>:8080
+#   - 如需挂载静态目录（不重建镜像即可更新），取消 volume 注释：
+#       volumes:
+#         - ./site:/usr/share/nginx/html:ro
+# ============================================================
+
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: carbon-grading-web:latest
+    container_name: carbon-grading
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    # volumes:
+    #   - ../site:/usr/share/nginx/html:ro   # 可选：挂载方式更新站点
