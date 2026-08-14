@@ -135,13 +135,14 @@ export default function FinancialMarket() {
     };
   }, []);
 
-  /** 5 维筛选（原产物 filter 逻辑逐字迁移） */
+  /** 5 维筛选（原产物 filter 逻辑改造：产品类型改为包含匹配，因接口 CPLX 字段为多值逗号分隔） */
   const filtered = useMemo(() => {
     return products.filter((p) => {
       const kwMatch =
         p.title.toLowerCase().includes(keyword.toLowerCase()) ||
         p.bank.toLowerCase().includes(keyword.toLowerCase());
-      const typeMatch = type === "全部" || p.type === type;
+      // 产品类型：包含匹配（CPLX 字段可能是 "绿色金融产品,绿色转型金融产品,供应链金融产品" 逗号分隔）
+      const typeMatch = type === "全部" || (p.type || "").includes(type);
       const ratingMatch = rating === "全部" || p.requiredRating === rating;
       const amountMatch = amount === "全部" || p.amount.includes(amount.replace("万", ""));
       const bankMatch = bank === "全部" || p.bank === bank;
