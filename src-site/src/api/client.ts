@@ -83,6 +83,9 @@ export interface RawFinancialProduct {
   CPLX?: string;
   FLFW?: string;
   LLFW?: string;
+  /** 等级数字（"1"/"2"/"3"，1=评级等级全部适用，2=AA级及以上，3=AAA级专属） */
+  Grade?: string;
+  /** 等级展示文本（接口已规整好，如"评级等级全部适用"/"AA级及以上"/"AAA级专属"） */
   GradeShow?: string;
   Keyword1?: string;
   [key: string]: unknown;
@@ -122,17 +125,21 @@ export function productColor(type: string): string {
   return "#003366";
 }
 
-/** 评级等级归一化：接口 GradeShow 返回数字（1/2/3），兜底数据是中文标签
- *   3 / AAA → AAA级专属（最高）
- *   2 / AA  → AA级及以上
- *   1 / A   → A级及以上
+/** 评级等级归一化：接口 Grade / GradeShow → 中文标签
+ *   数字 1 / "评级等级全部适用" → "评级等级全部适用"（最低级）
+ *   数字 2 / "AA" / "AA级及以上"       → "AA级及以上"
+ *   数字 3 / "AAA" / "AAA级专属"      → "AAA级专属"
+ *  接口实际字段：
+ *   - Grade = "1"/"2"/"3"（数字）
+ *   - GradeShow = "评级等级全部适用"/"AA级及以上"/"AAA级专属"（中文展示）
+ *  优先用 GradeShow（接口已规整），兜底用 Grade（或兼容未知格式）
  */
 export function ratingLabel(r: unknown): string {
   const s = String(r ?? "").trim();
   if (s === "3" || s === "AAA" || s === "AAA级专属") return "AAA级专属";
   if (s === "2" || s === "AA" || s === "AA级及以上") return "AA级及以上";
-  if (s === "1" || s === "A" || s === "A级及以上") return "A级及以上";
-  return s; // 其他值原样保留（兼容未知格式）
+  if (s === "1" || s === "A" || s === "A级及以上" || s === "评级等级全部适用") return "评级等级全部适用";
+  return s;
 }
 
 /** 原始产品 → 展示产品（原产物 mp 函数逐字迁移 + 评级归一化） */
@@ -146,7 +153,7 @@ export function mapProduct(p: RawFinancialProduct, i: number): FinancialProduct 
     rate: cls === "保险" ? p.FLFW || "" : p.LLFW || "",
     rateLabel: cls === "保险" ? "年费率" : "年利率",
     type: cplx || cls,
-    requiredRating: ratingLabel(p.GradeShow),   // 数字 → 中文等级标签
+    requiredRating: ratingLabel(p.GradeShow ?? p.Grade ?? ""),   // 优先 GradeShow（接口已规整的中文），兜底用 Grade（数字）
     amount: "",
     description: p.Keyword1 || "",
     features: (p.Keyword1 || "").split(/[、,，]/).slice(0, 3),

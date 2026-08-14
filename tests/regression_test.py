@@ -346,10 +346,13 @@ def t_visual_checklist():
     check("金融: 评级用数字等级比较（RATING_LEVEL + ratingLevelValue）",
           "RATING_LEVEL" in fm and "ratingLevelValue" in fm
           and ">=" in fm and "RATING_LEVEL[rating]" in fm)
-    # API client: 评级归一化（数字 → 中文标签）
+    # API client: GradeShow 优先于 Grade（接口已规整好）
     client = read("src-site/src/api/client.ts") or ""
-    check("API: 评级归一化 ratingLabel（1/2/3 → 中文）",
-          "ratingLabel" in client and "AAA级专属" in client and "requiredRating: ratingLabel" in client)
+    check("API: GradeShow 评级展示文本字段",
+          "GradeShow" in client and "GradeShow?: string" in client)
+    check("API: ratingLabel 归一化（数字 1/2/3 + 评级等级全部适用）",
+          "ratingLabel" in client and "评级等级全部适用" in client
+          and "p.GradeShow ?? p.Grade" in client)
 
     # ---- 证书查询（uat iA 结构） ----
     check("证书: hero 渐变 from-[#003366] to-[#004d99]", "from-[#003366] to-[#004d99]" in cert)

@@ -26,23 +26,27 @@ const FALLBACK_PRODUCTS: FinancialProduct[] = [
 ];
 
 const TYPE_OPTIONS = ["全部", "其他金融产品", "绿色金融产品", "绿色转型金融产品", "供应链金融产品", "绿色保险", "绿色转型保险", "其他保险产品", "投资理财"];
-const RATING_OPTIONS = ["全部", "AAA级专属", "AA级及以上", "A级及以上"];
+/** 评级筛选：与接口 GradeShow 字段对齐（1=评级等级全部适用, 2=AA级及以上, 3=AAA级专属）
+ *  选 N 级及以上 = 匹配 Grade >= N 的产品（数字比较，避免字符串包含歧义） */
+const RATING_OPTIONS = ["全部", "评级等级全部适用", "AA级及以上", "AAA级专属"];
 const AMOUNT_OPTIONS = ["全部", "500万以下", "500万-2000万", "2000万以上"];
 const BANK_OPTIONS = ["全部", "绿色资本银行", "生态金融合作伙伴", "未来地球银行", "中国银行", "浦发银行", "建设银行"];
 
-/* 评级等级：数字越大等级越高（接口 GradeShow 返回 1/2/3；1=A 级，2=AA 级，3=AAA 级）
- * 选 N 级及以上 = 匹配所有等级 >= N 的产品（阶梯语义，用数字比较而非字符串包含） */
+/* 评级数字等级：与接口 GradeShow 字段对齐（数字越大等级越高）
+ *   评级等级全部适用 → 1（最低级，等价于"全部"）
+ *   AA级及以上      → 2
+ *   AAA级专属       → 3（最高级） */
 const RATING_LEVEL: Record<string, number> = {
-  "AAA级专属": 3,
+  "评级等级全部适用": 1,
   "AA级及以上": 2,
-  "A级及以上": 1,
+  "AAA级专属": 3,
 };
 
-/** 产品评级等级 → 数字（用于 >= 比较） */
+/** 产品评级等级 → 数字（用于 >= 比较；兼容兜底数据"A级及以上"映射为 1） */
 function ratingLevelValue(r: string): number {
   if (r === "AAA级专属") return 3;
   if (r === "AA级及以上") return 2;
-  if (r === "A级及以上") return 1;
+  if (r === "评级等级全部适用" || r === "A级及以上") return 1;
   return 0;
 }
 
