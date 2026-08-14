@@ -324,7 +324,7 @@ def t_visual_checklist():
         check(f"首页: 合作机构 {p}", p in home)
 
     # ---- 金融超市（uat B2 结构） ----
-    check("金融: hero 深绿底 from-[#1A5319] to-[#0d3a14]", "from-[#1A5319]" in fm and "to-[#0d3a14]" in fm)
+    check("金融: hero 深蓝到深绿渐变 from-[#003366] to-[#1A5319]", "from-[#003366]" in fm and "to-[#1A5319]" in fm)
     check("金融: hero 内搜索框 placeholder", "搜索金融机构或绿色产品名称" in fm)
     check("金融: 左筛选卡片（aside w-80）", "w-80 flex-shrink-0" in fm)
     check("金融: 筛选卡片标题'筛选条件'", "筛选条件" in fm)

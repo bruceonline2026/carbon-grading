@@ -186,8 +186,8 @@ export default function FinancialMarket() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* ========== Hero（深绿底 + 大标题 + 搜索框在内）========== */}
-      <header className="bg-gradient-to-r from-[#1A5319] to-[#0d3a14] text-white py-8 shadow-lg">
+      {/* ========== Hero（深蓝到深绿渐变，对照 uat B2）========== */}
+      <header className="bg-gradient-to-r from-[#003366] to-[#1A5319] text-white py-8 shadow-lg">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between mb-6">
             <div>
