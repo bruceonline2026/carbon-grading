@@ -56,17 +56,21 @@ export default function JoinUs() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 页头 */}
-      <header className="bg-gradient-to-r from-[#003366] to-[#1A5319] text-white py-12 shadow-lg">
-        <div className="max-w-7xl mx-auto px-6">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2 flex items-center gap-3">
-            <Handshake className="w-9 h-9" /> 加入我们
-          </h1>
-          <p className="text-blue-100/90 text-lg">成为官方授权合作伙伴，共享绿色评级市场机遇</p>
+      {/* 标题区（uat 站：白底小标签 + 居中大标题 + 长副标题，无渐变 hero） */}
+      <main className="max-w-7xl mx-auto px-6 py-10">
+        <div className="text-center mb-10">
+          <span
+            className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full mb-3"
+            style={{ background: "rgba(26,83,25,.08)", color: "#1A5319" }}
+          >
+            <span>▸</span> 合作伙伴招募
+          </span>
+          <h1 className="text-3xl md:text-4xl font-bold text-[#003366] mb-3">加入我们</h1>
+          <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            诚邀具备专业资质的咨询机构、金融机构及行业伙伴共同参与企业绿色评级生态建设，携手推动绿色金融与可持续发展融合落地。
+          </p>
         </div>
-      </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">
           {/* 左：权益（2/5） */}
           <aside className="lg:col-span-2">
@@ -241,7 +245,7 @@ export default function JoinUs() {
             </div>
           </section>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

@@ -376,6 +376,13 @@ def t_visual_checklist():
            "OfficiaWebsiteUrl", "Memo", "OrgType", "Region"]))
     check("加入: 5 项权益", all(x in join for x in
           ["官方授权资质", "专属数据平台", "专业培训支持", "业务协同资源", "市场推广赋能"]))
+    # 加入我们：标题区为白底小标签+大标题+长副标题（uat 风格，无渐变 hero）
+    check("加入: 标题区小标签'合作伙伴招募'",
+          "合作伙伴招募" in join and "▸" in join)
+    check("加入: 标题长副标题（诚邀具备专业资质...）",
+          "诚邀具备专业资质的咨询机构" in join)
+    check("加入: 无深蓝到深绿渐变 hero header（改为白底）",
+          'bg-gradient-to-r from-[#003366] to-[#1A5319] text-white py-12' not in join)
 
     # ---- NavBar 8 项菜单 ----
     for m in ["首页", "金融市场", "证书查询", "指标申报", "流程", "服务", "合作伙伴", "加入我们"]:
