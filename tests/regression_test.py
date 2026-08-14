@@ -257,9 +257,15 @@ def t_src_site():
               all(x in pkg for x in ['"react"', '"react-router-dom"', '"vite"', '"tailwindcss"']))
 
     app = read("src-site/src/App.tsx")
-    check("App.tsx 存在且含 8 条路由", app is not None and all(
+    check("App.tsx 存在且含核心路由", app is not None and all(
         f'path: "{p}"' in app for p in
         ["financial-supermarket", "certificate-query", "process", "services", "partners", "join-us", "about"]))
+    # /financial-supermarket 必须独立路由（uat B2 无 NavBar/Footer）
+    if app:
+        fs_idx = app.find('path: "financial-supermarket"')
+        layout_idx = app.find('element: <Layout />')
+        check("金融超市: 独立路由（不通过 Layout 包裹）",
+              fs_idx > 0 and layout_idx > 0 and fs_idx > layout_idx)
 
     slider = read("src-site/src/components/SliderCaptcha.tsx")
     check("滑块算法常量（240/200/10）", slider is not None and all(
