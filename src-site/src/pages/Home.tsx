@@ -335,6 +335,24 @@ function PartnerSection() {
 export default function Home() {
   const [products, setProducts] = useState<FinancialProduct[]>(HOME_FALLBACK);
 
+  // 支持锚点定位（菜单"流程/服务/合作伙伴" → /#process /#services /#partners）
+  useEffect(() => {
+    const scrollToHash = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const el = document.querySelector(hash);
+      if (el) {
+        setTimeout(() => {
+          const top = el.getBoundingClientRect().top + window.scrollY - 88;
+          window.scrollTo({ top, behavior: "smooth" });
+        }, 60);
+      }
+    };
+    scrollToHash();
+    window.addEventListener("hashchange", scrollToHash);
+    return () => window.removeEventListener("hashchange", scrollToHash);
+  }, []);
+
   useEffect(() => {
     let alive = true;
     fetchFinancialProducts({ 官网首页显示: "true", 官网本周热门推荐: "false" }).then((raw) => {

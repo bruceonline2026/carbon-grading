@@ -257,15 +257,32 @@ def t_src_site():
               all(x in pkg for x in ['"react"', '"react-router-dom"', '"vite"', '"tailwindcss"']))
 
     app = read("src-site/src/App.tsx")
-    check("App.tsx 存在且含核心路由", app is not None and all(
+    # 独立路由（不再包含 process/services/partners —— 它们是首页锚点）
+    check("App.tsx 存在且含独立路由", app is not None and all(
         f'path: "{p}"' in app for p in
-        ["financial-supermarket", "certificate-query", "process", "services", "partners", "join-us", "about"]))
-    # /financial-supermarket 必须独立路由（uat B2 无 NavBar/Footer）
+        ["financial-supermarket", "certificate-query", "join-us", "about"]))
     if app:
+        # 流程/服务/合作伙伴不是独立路由
+        check("App.tsx 无 /process 独立路由（首页锚点）", 'path: "process"' not in app)
+        check("App.tsx 无 /services 独立路由（首页锚点）", 'path: "services"' not in app)
+        check("App.tsx 无 /partners 独立路由（首页锚点）", 'path: "partners"' not in app)
+        # /financial-supermarket 必须独立路由（uat B2 无 NavBar/Footer）
         fs_idx = app.find('path: "financial-supermarket"')
         layout_idx = app.find('element: <Layout />')
         check("金融超市: 独立路由（不通过 Layout 包裹）",
               fs_idx > 0 and layout_idx > 0 and fs_idx > layout_idx)
+    # NavBar: 流程/服务/合作伙伴为首页锚点（hash 跳转）
+    navbar2 = read("src-site/src/components/NavBar.tsx") or ""
+    if navbar2:
+        check("NavBar: 流程为首页锚点 /#process",
+              'label: "流程"' in navbar2 and 'hash: "process"' in navbar2)
+        check("NavBar: 服务为首页锚点 /#services",
+              'label: "服务"' in navbar2 and 'hash: "services"' in navbar2)
+        check("NavBar: 合作伙伴为首页锚点 /#partners",
+              'label: "合作伙伴"' in navbar2 and 'hash: "partners"' in navbar2)
+    # Home: 支持 hash 锚点滚动
+    home_src = read("src-site/src/pages/Home.tsx") or ""
+    check("Home: hash 锚点滚动支持", "hashchange" in home_src and "scrollTo" in home_src)
 
     slider = read("src-site/src/components/SliderCaptcha.tsx")
     check("滑块算法常量（240/200/10）", slider is not None and all(
