@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ChevronDown, Flame, Search, X } from "lucide-react";
-import ProductCard from "../components/ProductCard";
+import { ArrowLeft, Filter, Flame, Search, SlidersHorizontal, X } from "lucide-react";
+import { ProductIcon } from "../components/ProductCard";
 import {
   fetchFinancialProducts,
   fetchProductTypes,
@@ -9,7 +9,7 @@ import {
   type FinancialProduct,
 } from "../api/client";
 
-/** 金融超市兜底数据（原产物 y array 逐字迁移：12 个产品） */
+/* 金融超市 12 兜底产品（与 uat B2 y 数组逐字一致） */
 const FALLBACK_PRODUCTS: FinancialProduct[] = [
   { id: 1, title: "碳挂钩贷款", bank: "绿色资本银行", rate: "3.2%", rateLabel: "年利率", type: "绿色贷款", requiredRating: "AA级及以上", amount: "最高1000万元", description: "", features: ["最高1000万元", "5-10年期限", "绩效浮动利率"], iconType: "default", color: "#1A5319", hot: true },
   { id: 2, title: "可持续增长信贷", bank: "生态金融合作伙伴", rate: "3.8%", rateLabel: "年利率", type: "绿色贷款", requiredRating: "A级及以上", amount: "500万-2000万", description: "", features: ["循环信贷", "快速审批", "税收优惠"], iconType: "default", color: "#003366", hot: false },
@@ -30,8 +30,8 @@ const RATING_OPTIONS = ["全部", "AAA级专属", "AA级及以上", "A级及以�
 const AMOUNT_OPTIONS = ["全部", "500万以下", "500万-2000万", "2000万以上"];
 const BANK_OPTIONS = ["全部", "绿色资本银行", "生态金融合作伙伴", "未来地球银行", "中国银行", "浦发银行", "建设银行"];
 
-/** 筛选器（原产物 T 组件） */
-function Filter({ label, value, onChange, options }: {
+/* 筛选器（原产物 T 组件） */
+function FilterSelect({ label, value, onChange, options }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
@@ -49,7 +49,50 @@ function Filter({ label, value, onChange, options }: {
           <option key={o} value={o}>{o}</option>
         ))}
       </select>
-      <ChevronDown className="absolute right-3 top-11 w-5 h-5 text-gray-400 pointer-events-none" />
+      <SlidersHorizontal className="absolute right-3 top-11 w-5 h-5 text-gray-400 pointer-events-none" />
+    </div>
+  );
+}
+
+/* uat B2 风格产品卡：绿/蓝交替顶部 + HOT 徽章 + 圆形图标 + 特性列表 */
+function B2ProductCard({ p, idx }: { p: FinancialProduct; idx: number }) {
+  const isEven = idx % 2 === 1;
+  const headerColor = isEven ? "#1A5319" : "#003366";
+  return (
+    <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:-translate-y-1">
+      {/* 顶部色块 */}
+      <div className="p-6 text-white relative" style={{ background: `linear-gradient(135deg, ${headerColor} 0%, ${headerColor}dd 100%)` }}>
+        {p.hot && (
+          <div className="absolute top-3 right-3 bg-[#D4AF37] text-white text-xs font-bold px-2 py-1 rounded">
+            HOT
+          </div>
+        )}
+        <div className="flex items-center justify-between mb-4">
+          <ProductIcon type={p.iconType} className="w-10 h-10" />
+          <div className="text-right">
+            <div className="text-3xl font-bold">{p.rate}</div>
+            <div className="text-xs opacity-90">{p.rateLabel}</div>
+          </div>
+        </div>
+        <h3 className="text-xl font-bold mb-1">{p.title}</h3>
+        <div className="text-sm opacity-90">{p.bank}</div>
+      </div>
+      {/* 内容区 */}
+      <div className="p-6">
+        {p.requiredRating && (
+          <div className="inline-block mb-4 px-3 py-1 bg-[#1A5319]/10 text-[#1A5319] text-xs font-semibold rounded-full">
+            需 {p.requiredRating}
+          </div>
+        )}
+        <ul className="space-y-2 mb-6">
+          {p.features.map((f, i) => (
+            <li key={i} className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: p.color }} />
+              <span className="text-sm text-gray-700">{f}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
@@ -69,26 +112,22 @@ export default function FinancialMarket() {
   useEffect(() => {
     let alive = true;
 
-    // 类型下拉（接口失败保持兜底选项）
     fetchProductTypes().then((d) => {
       if (alive && d.length) setTypes(["全部"].concat(d));
     });
 
-    // 全量产品
     fetchFinancialProducts({ 官网首页显示: "false", 官网本周热门推荐: "false" }).then((raw) => {
       if (!alive) return;
       const mapped = raw.map(mapProduct);
       if (mapped.length) setProducts(mapped);
     });
 
-    // 热门推荐（本周）
     fetchFinancialProducts({ 官网首页显示: "false", 官网本周热门推荐: "true" }).then((raw) => {
       if (!alive) return;
       const mapped = raw.map(mapProduct);
       if (mapped.length) setHotProducts(mapped.slice(0, 3));
     });
 
-    // 至少展示一次 loading 状态（1.2s 后无论接口如何都展示数据）
     const t = setTimeout(() => alive && setLoading(false), 1200);
     return () => {
       alive = false;
@@ -120,8 +159,8 @@ export default function FinancialMarket() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 页头 */}
-      <header className="bg-gradient-to-r from-[#003366] to-[#1A5319] text-white py-8 shadow-lg">
+      {/* ========== Hero（深绿底 + 大标题 + 搜索框在内）========== */}
+      <header className="bg-gradient-to-r from-[#1A5319] to-[#0d3a14] text-white py-8 shadow-lg">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -135,87 +174,107 @@ export default function FinancialMarket() {
               <ArrowLeft className="w-5 h-5" /> 返回首页
             </Link>
           </div>
+          {/* 搜索框（hero 内） */}
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="搜索金融机构或绿色产品名称..."
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              className="w-full pl-12 pr-4 py-4 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
+            />
+          </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-10">
-        {/* 本周热门推荐 */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold text-[#003366] mb-6 flex items-center gap-2">
-            <Flame className="w-6 h-6 text-[#D4AF37]" /> 本周热门推荐
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {hotProducts.map((p) => (
-              <ProductCard key={p.id} p={p} />
-            ))}
-          </div>
-        </section>
-
-        {/* 筛选区 */}
-        <section className="bg-white rounded-xl shadow-md border border-gray-100 p-6 mb-8">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-bold text-gray-800">全部产品</h2>
-            <button
-              onClick={reset}
-              className="text-sm text-[#1A5319] hover:underline flex items-center gap-1"
-            >
-              <X className="w-4 h-4" /> 重置筛选
-            </button>
-          </div>
-          {/* 搜索 */}
-          <div className="relative mb-5">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="搜索产品名称或机构…"
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A5319] focus:border-transparent text-sm"
-            />
-          </div>
-          {/* 维度筛选 */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Filter label="产品类型" value={type} onChange={setType} options={types} />
-            <Filter label="适用评级" value={rating} onChange={setRating} options={RATING_OPTIONS} />
-            <Filter label="融资规模" value={amount} onChange={setAmount} options={AMOUNT_OPTIONS} />
-            <Filter label="金融机构" value={bank} onChange={setBank} options={BANK_OPTIONS} />
-          </div>
-        </section>
-
-        {/* 产品列表 */}
-        <section>
-          {loading ? (
-            <div className="grid md:grid-cols-3 gap-8">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white rounded-xl border border-gray-100 p-6 animate-pulse">
-                  <div className="h-4 w-20 bg-gray-200 rounded mb-3" />
-                  <div className="h-3 w-full bg-gray-100 rounded" />
-                  <div className="h-3 w-2/3 bg-gray-100 rounded mt-2" />
+      {/* ========== 主体（左右两列）========== */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex gap-8">
+          {/* ========== 左 aside（筛选 + 本周热门推荐小卡）========== */}
+          <aside className="w-80 flex-shrink-0">
+            {/* 筛选条件卡 */}
+            <div className="bg-white rounded-xl shadow-md p-6 mb-6 sticky top-8">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2">
+                  <Filter className="w-5 h-5 text-[#1A5319]" />
+                  <h2 className="text-xl font-bold text-[#003366]">筛选条件</h2>
                 </div>
-              ))}
-            </div>
-          ) : filtered.length === 0 ? (
-            <div className="bg-white rounded-xl border border-gray-100 p-16 text-center">
-              <div className="w-16 h-16 mx-auto rounded-full bg-gray-100 flex items-center justify-center mb-4">
-                <Search className="w-7 h-7 text-gray-400" />
+                <button
+                  onClick={reset}
+                  className="text-sm text-gray-500 hover:text-[#1A5319] transition-colors flex items-center gap-1"
+                >
+                  <X className="w-4 h-4" /> 重置
+                </button>
               </div>
-              <h3 className="text-lg font-bold text-gray-700 mb-1">未找到匹配产品</h3>
-              <p className="text-sm text-gray-500 mb-4">尝试调整筛选条件或搜索关键词</p>
-              <button
-                onClick={reset}
-                className="px-6 py-2.5 bg-[#1A5319] hover:bg-[#0d3a14] text-white rounded-lg text-sm font-semibold transition-colors"
-              >
-                重置筛选
-              </button>
+              <div className="space-y-4">
+                <FilterSelect label="产品类型" value={type} onChange={setType} options={types} />
+                <FilterSelect label="适用评级" value={rating} onChange={setRating} options={RATING_OPTIONS} />
+                <FilterSelect label="融资额度" value={amount} onChange={setAmount} options={AMOUNT_OPTIONS} />
+                <FilterSelect label="所属银行" value={bank} onChange={setBank} options={BANK_OPTIONS} />
+              </div>
             </div>
-          ) : (
-            <div className="grid md:grid-cols-3 gap-8">
-              {filtered.map((p) => (
-                <ProductCard key={p.id} p={p} />
-              ))}
+            {/* 本周热门推荐小卡（绿色渐变） */}
+            <div className="bg-gradient-to-br from-[#1A5319] to-[#003366] rounded-xl shadow-md p-6 text-white">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <Flame className="w-5 h-5" /> 本周热门推荐
+              </h3>
+              <div className="space-y-3">
+                {hotProducts.map((h) => (
+                  <div
+                    key={h.id}
+                    className="bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all cursor-pointer"
+                  >
+                    <div className="font-semibold text-sm mb-1">{h.title}</div>
+                    <div className="text-xs opacity-75">{h.bank}</div>
+                    <div className="text-xl font-bold mt-2">年利率 {h.rate}</div>
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
-        </section>
+          </aside>
+
+          {/* ========== 右 main（产品网格）========== */}
+          <main className="flex-1">
+            <div className="mb-6 flex items-center justify-between">
+              <div className="text-gray-600">
+                找到 <span className="font-bold text-[#003366]">{filtered.length}</span> 个产品
+              </div>
+            </div>
+
+            {loading ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="bg-white rounded-xl border border-gray-100 p-6 animate-pulse">
+                    <div className="h-4 w-20 bg-gray-200 rounded mb-3" />
+                    <div className="h-3 w-full bg-gray-100 rounded" />
+                    <div className="h-3 w-2/3 bg-gray-100 rounded mt-2" />
+                  </div>
+                ))}
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="bg-white rounded-xl border border-gray-100 p-16 text-center">
+                <div className="w-16 h-16 mx-auto rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                  <Search className="w-7 h-7 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-700 mb-1">未找到匹配产品</h3>
+                <p className="text-sm text-gray-500 mb-4">尝试调整筛选条件或搜索关键词</p>
+                <button
+                  onClick={reset}
+                  className="px-6 py-2.5 bg-[#1A5319] hover:bg-[#0d3a14] text-white rounded-lg text-sm font-semibold transition-colors"
+                >
+                  重置筛选条件
+                </button>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filtered.map((p, idx) => (
+                  <B2ProductCard key={p.id} p={p} idx={idx} />
+                ))}
+              </div>
+            )}
+          </main>
+        </div>
       </div>
     </div>
   );
