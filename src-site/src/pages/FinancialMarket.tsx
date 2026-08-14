@@ -30,6 +30,16 @@ const RATING_OPTIONS = ["全部", "AAA级专属", "AA级及以上", "A级及以�
 const AMOUNT_OPTIONS = ["全部", "500万以下", "500万-2000万", "2000万以上"];
 const BANK_OPTIONS = ["全部", "绿色资本银行", "生态金融合作伙伴", "未来地球银行", "中国银行", "浦发银行", "建设银行"];
 
+/* 评级阶梯：选 N 级及以上 = 匹配所有等级 ≥ N 的产品
+ *   AAA级专属 → [AAA级专属]
+ *   AA级及以上 → [AA级及以上, AAA级专属]
+ *   A级及以上  → [A级及以上, AA级及以上, AAA级专属] */
+const RATING_HIERARCHY: Record<string, string[]> = {
+  "AAA级专属": ["AAA级专属"],
+  "AA级及以上": ["AA级及以上", "AAA级专属"],
+  "A级及以上": ["A级及以上", "AA级及以上", "AAA级专属"],
+};
+
 /* 筛选器（原产物 T 组件） */
 function FilterSelect({ label, value, onChange, options }: {
   label: string;
@@ -135,15 +145,19 @@ export default function FinancialMarket() {
     };
   }, []);
 
-  /** 5 维筛选（原产物 filter 逻辑改造：产品类型改为包含匹配，因接口 CPLX 字段为多值逗号分隔） */
+  /** 5 维筛选（原产物 filter 逻辑改造）
+ * - 产品类型：包含匹配（CPLX 字段可能是 "绿色金融产品,绿色转型金融产品,供应链金融产品" 逗号分隔）
+ * - 评级：选 N 级及以上 = 匹配所有等级 ≥ N 的产品（阶梯匹配，不是简单 === 或 includes）
+ */
   const filtered = useMemo(() => {
     return products.filter((p) => {
       const kwMatch =
         p.title.toLowerCase().includes(keyword.toLowerCase()) ||
         p.bank.toLowerCase().includes(keyword.toLowerCase());
-      // 产品类型：包含匹配（CPLX 字段可能是 "绿色金融产品,绿色转型金融产品,供应链金融产品" 逗号分隔）
+      // 产品类型：包含匹配
       const typeMatch = type === "全部" || (p.type || "").includes(type);
-      const ratingMatch = rating === "全部" || p.requiredRating === rating;
+      // 评级：阶梯匹配（选"A 级及以上"匹配 A + AA + AAA）
+      const ratingMatch = rating === "全部" || (RATING_HIERARCHY[rating] || []).includes(p.requiredRating);
       const amountMatch = amount === "全部" || p.amount.includes(amount.replace("万", ""));
       const bankMatch = bank === "全部" || p.bank === bank;
       return kwMatch && typeMatch && ratingMatch && amountMatch && bankMatch;
