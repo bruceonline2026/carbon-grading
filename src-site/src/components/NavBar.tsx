@@ -32,7 +32,7 @@ export default function NavBar() {
           </div>
           <div className="leading-tight">
             <div className="text-[#003366] font-bold text-xl">企业绿色评级系统</div>
-            <div className="text-xs text-gray-500">专业可持续发展评估店</div>
+            <div className="text-xs text-gray-500">专业可持续发展评估</div>
           </div>
         </Link>
 
