@@ -122,7 +122,20 @@ export function productColor(type: string): string {
   return "#003366";
 }
 
-/** 原始产品 → 展示产品（原产物 mp 函数逐字迁移） */
+/** 评级等级归一化：接口 GradeShow 返回数字（1/2/3），兜底数据是中文标签
+ *   3 / AAA → AAA级专属（最高）
+ *   2 / AA  → AA级及以上
+ *   1 / A   → A级及以上
+ */
+export function ratingLabel(r: unknown): string {
+  const s = String(r ?? "").trim();
+  if (s === "3" || s === "AAA" || s === "AAA级专属") return "AAA级专属";
+  if (s === "2" || s === "AA" || s === "AA级及以上") return "AA级及以上";
+  if (s === "1" || s === "A" || s === "A级及以上") return "A级及以上";
+  return s; // 其他值原样保留（兼容未知格式）
+}
+
+/** 原始产品 → 展示产品（原产物 mp 函数逐字迁移 + 评级归一化） */
 export function mapProduct(p: RawFinancialProduct, i: number): FinancialProduct {
   const cplx = p.CPLX || "";
   const cls = p.Class || "";
@@ -133,7 +146,7 @@ export function mapProduct(p: RawFinancialProduct, i: number): FinancialProduct 
     rate: cls === "保险" ? p.FLFW || "" : p.LLFW || "",
     rateLabel: cls === "保险" ? "年费率" : "年利率",
     type: cplx || cls,
-    requiredRating: p.GradeShow || "",
+    requiredRating: ratingLabel(p.GradeShow),   // 数字 → 中文等级标签
     amount: "",
     description: p.Keyword1 || "",
     features: (p.Keyword1 || "").split(/[、,，]/).slice(0, 3),

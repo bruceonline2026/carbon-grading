@@ -342,9 +342,14 @@ def t_visual_checklist():
     # 类型筛选必须是包含匹配（数据库 CPLX 字段为多值逗号分隔，如"绿色金融产品,绿色转型金融产品,供应链金融产品"）
     check("金融: 类型筛选用 includes（包含匹配）而非 ===",
           "includes(type)" in fm or ".type.includes(" in fm)
-    # 评级筛选：阶梯匹配（选 N 级及以上匹配所有 ≥N 等级，不是简单 ===）
-    check("金融: 评级用阶梯匹配 RATING_HIERARCHY",
-          "RATING_HIERARCHY" in fm and "AAA级专属" in fm and "AA级及以上" in fm)
+    # 评级筛选：接口 GradeShow 返回数字 1/2/3，筛选用数字等级比较（选 N 匹配 >=N）
+    check("金融: 评级用数字等级比较（RATING_LEVEL + ratingLevelValue）",
+          "RATING_LEVEL" in fm and "ratingLevelValue" in fm
+          and ">=" in fm and "RATING_LEVEL[rating]" in fm)
+    # API client: 评级归一化（数字 → 中文标签）
+    client = read("src-site/src/api/client.ts") or ""
+    check("API: 评级归一化 ratingLabel（1/2/3 → 中文）",
+          "ratingLabel" in client and "AAA级专属" in client and "requiredRating: ratingLabel" in client)
 
     # ---- 证书查询（uat iA 结构） ----
     check("证书: hero 渐变 from-[#003366] to-[#004d99]", "from-[#003366] to-[#004d99]" in cert)

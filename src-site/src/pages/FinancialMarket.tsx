@@ -30,15 +30,21 @@ const RATING_OPTIONS = ["全部", "AAA级专属", "AA级及以上", "A级及以�
 const AMOUNT_OPTIONS = ["全部", "500万以下", "500万-2000万", "2000万以上"];
 const BANK_OPTIONS = ["全部", "绿色资本银行", "生态金融合作伙伴", "未来地球银行", "中国银行", "浦发银行", "建设银行"];
 
-/* 评级阶梯：选 N 级及以上 = 匹配所有等级 ≥ N 的产品
- *   AAA级专属 → [AAA级专属]
- *   AA级及以上 → [AA级及以上, AAA级专属]
- *   A级及以上  → [A级及以上, AA级及以上, AAA级专属] */
-const RATING_HIERARCHY: Record<string, string[]> = {
-  "AAA级专属": ["AAA级专属"],
-  "AA级及以上": ["AA级及以上", "AAA级专属"],
-  "A级及以上": ["A级及以上", "AA级及以上", "AAA级专属"],
+/* 评级等级：数字越大等级越高（接口 GradeShow 返回 1/2/3；1=A 级，2=AA 级，3=AAA 级）
+ * 选 N 级及以上 = 匹配所有等级 >= N 的产品（阶梯语义，用数字比较而非字符串包含） */
+const RATING_LEVEL: Record<string, number> = {
+  "AAA级专属": 3,
+  "AA级及以上": 2,
+  "A级及以上": 1,
 };
+
+/** 产品评级等级 → 数字（用于 >= 比较） */
+function ratingLevelValue(r: string): number {
+  if (r === "AAA级专属") return 3;
+  if (r === "AA级及以上") return 2;
+  if (r === "A级及以上") return 1;
+  return 0;
+}
 
 /* 筛选器（原产物 T 组件） */
 function FilterSelect({ label, value, onChange, options }: {
@@ -156,8 +162,10 @@ export default function FinancialMarket() {
         p.bank.toLowerCase().includes(keyword.toLowerCase());
       // 产品类型：包含匹配
       const typeMatch = type === "全部" || (p.type || "").includes(type);
-      // 评级：阶梯匹配（选"A 级及以上"匹配 A + AA + AAA）
-      const ratingMatch = rating === "全部" || (RATING_HIERARCHY[rating] || []).includes(p.requiredRating);
+      // 评级：数字等级比较（接口 GradeShow 为 1/2/3；选 N 级及以上 = 匹配 >=N）
+      const ratingMatch =
+        rating === "全部" ||
+        ratingLevelValue(p.requiredRating) >= (RATING_LEVEL[rating] || 0);
       const amountMatch = amount === "全部" || p.amount.includes(amount.replace("万", ""));
       const bankMatch = bank === "全部" || p.bank === bank;
       return kwMatch && typeMatch && ratingMatch && amountMatch && bankMatch;
