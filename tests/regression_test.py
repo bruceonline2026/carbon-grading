@@ -295,6 +295,91 @@ def t_src_site():
 
 
 # ============================================================
+# 13. 视觉对照 checklist（确保源码工程每个页面的关键视觉特征存在）
+#    与黄金基线（结构完整性）互补：本组聚焦"实际页面渲染与 uat 站一致"
+#    的关键 className/文案/图标断言，作为视觉对齐的底线检查
+# ============================================================
+def t_visual_checklist():
+    print("\n[+13] 视觉对照 checklist（源码工程）")
+
+    home = read("src-site/src/pages/Home.tsx") or ""
+    fm = read("src-site/src/pages/FinancialMarket.tsx") or ""
+    cert = read("src-site/src/pages/CertificateQuery.tsx") or ""
+    join = read("src-site/src/pages/JoinUs.tsx") or ""
+    footer = read("src-site/src/components/Footer.tsx") or ""
+    navbar = read("src-site/src/components/NavBar.tsx") or ""
+    slider = read("src-site/src/components/SliderCaptcha.tsx") or ""
+
+    # ---- 首页：hero 与 5 区块 ----
+    check("首页: hero 阿里OSS背景图", "carbon-public-visit.oss-cn-shanghai.aliyuncs.com/banner/banner5.jpg" in home)
+    check("首页: hero 标题'绿色评级，定义未来价值'", "绿色评级，" in home and "定义未来价值" in home)
+    check("首页: hero 副标题'基于国家标准与AI大数据'", "基于国家标准与AI大数据" in home)
+    check("首页: hero CTA'立即注册'", "立即注册" in home)
+    check("首页: hero 链接到 EnterpriseRegistration", "EnterpriseRegistration@1" in home)
+    check("首页: 区块'绿色金融服务'", "绿色金融服务" in home)
+    check("首页: 区块'流程化评级体系'", "流程化评级体系" in home)
+    check("首页: 区块'核心价值主张'", "核心价值主张" in home)
+    check("首页: 区块'合作机构'", "合作机构" in home)
+    for p in ["上海环境能源交易所", "中国农业银行", "平安财产保险", "太平洋财产保险"]:
+        check(f"首页: 合作机构 {p}", p in home)
+
+    # ---- 金融超市（uat B2 结构） ----
+    check("金融: hero 深绿底 from-[#1A5319] to-[#0d3a14]", "from-[#1A5319]" in fm and "to-[#0d3a14]" in fm)
+    check("金融: hero 内搜索框 placeholder", "搜索金融机构或绿色产品名称" in fm)
+    check("金融: 左筛选卡片（aside w-80）", "w-80 flex-shrink-0" in fm)
+    check("金融: 筛选卡片标题'筛选条件'", "筛选条件" in fm)
+    check("金融: 4 个筛选维度（产品类型/适用评级/融资额度/所属银行）",
+          all(x in fm for x in ["产品类型", "适用评级", "融资额度", "所属银行"]))
+    check("金融: 侧栏本周热门推荐卡（绿色渐变）",
+          "from-[#1A5319] to-[#003366]" in fm and "本周热门推荐" in fm)
+    check("金融: 找到 N 个产品 计数", "找到" in fm)
+    check("金融: 12 个兜底产品（部分代表）",
+          all(x in fm for x in ["碳挂钩贷款", "ESG卓越融资", "可再生能源项目债券", "ESG主题投资基金", "绿色供应链金融"]))
+    check("金融: 产品卡绿/蓝交替渐变（idx 奇偶切换 绿/蓝）",
+          "idx" in fm and ("idx % 2" in fm or "idx%2" in fm)
+          and "#1A5319" in fm and "#003366" in fm)
+    check("金融: HOT 徽章 金色 bg-[#D4AF37]", "bg-[#D4AF37] text-white" in fm and "HOT" in fm)
+
+    # ---- 证书查询（uat iA 结构） ----
+    check("证书: hero 渐变 from-[#003366] to-[#004d99]", "from-[#003366] to-[#004d99]" in cert)
+    check("证书: 标题'证书公开查询'", "证书公开查询" in cert)
+    check("证书: 副标题'权威数据 · 实时核验 · 安全可靠'", "权威数据 · 实时核验 · 安全可靠" in cert)
+    check("证书: 演示说明浮动提示", "演示说明" in cert)
+    check("证书: 滑块触发查询按钮", "立即查询" in cert)
+    check("证书: 结果卡片 6 字段（评级年度/所属区域/所属行业/评级类型/评级结果）",
+          all(x in cert for x in ["评级年度", "所属区域", "所属行业", "评级类型", "评级结果", "评级等级"]))
+    check("证书: 失败卡片'未查询到相关记录'", "未查询到相关记录" in cert)
+
+    # ---- 加入我们 ----
+    check("加入: 10 字段表单", all(x in join for x in
+          ["EnterpriseName", "EnterpriseCode", "Linkman", "Post", "Tel", "EMail",
+           "OfficiaWebsiteUrl", "Memo", "OrgType", "Region"]))
+    check("加入: 5 项权益", all(x in join for x in
+          ["官方授权资质", "专属数据平台", "专业培训支持", "业务协同资源", "市场推广赋能"]))
+
+    # ---- NavBar 8 项菜单 ----
+    for m in ["首页", "金融市场", "证书查询", "指标申报", "流程", "服务", "合作伙伴", "加入我们"]:
+        check(f"NavBar: 菜单 {m}", m in navbar)
+    check("NavBar: 无'能源计算'", "能源计算" not in navbar)
+    check("NavBar: 登录按钮金底深蓝字", "bg-[#D4AF37]" in navbar and "text-[#003366]" in navbar)
+
+    # ---- Footer（uat ic 组件）----
+    check("Footer: 深蓝背景 bg-[#003366]", "bg-[#003366]" in footer)
+    check("Footer: 4 列金色小标题", all(x in footer for x in
+          ["快速链接", "服务项目", "联系我们"]) and footer.count("text-[#D4AF37]") >= 4)
+    check("Footer: 联系我们 4 项（地址/电话/邮箱）",
+          all(x in footer for x in ["400-123-4567", "service@carbon-grading.com", "可持续发展大道"]))
+    check("Footer: 备案区（沪ICP备 + 沪公网安备）",
+          "沪ICP备" in footer and "沪公网安备" in footer)
+    check("Footer: 政策行（隐私政策/服务条款/Cookie政策）",
+          all(x in footer for x in ["隐私政策", "服务条款", "Cookie政策"]))
+
+    # ---- 滑块算法常量 ----
+    check("滑块: 阈值常量 240/200/10", all(x in slider for x in
+          ["TRACK_PX = 240", "TARGET_PX = 200", "TOLERANCE = 10"]))
+
+
+# ============================================================
 # 汇总
 # ============================================================
 def main():
@@ -313,6 +398,7 @@ def main():
     t_webconfig()
     t_deploy()
     t_src_site()
+    t_visual_checklist()
     t_online()
 
     passed = sum(1 for _, ok, _ in results if ok)
