@@ -1,12 +1,10 @@
 import { useState } from "react";
 import {
-  AlertCircle,
   Award,
   Building2,
   FileSearch,
   Search,
   ShieldCheck,
-  X,
   XCircle,
 } from "lucide-react";
 import SliderCaptcha from "../components/SliderCaptcha";
@@ -132,32 +130,7 @@ function FailureCard() {
   );
 }
 
-/** 演示说明浮动提示（uat 站带的演示模式提示） */
-function DemoHint({ visible, onClose }: { visible: boolean; onClose: () => void }) {
-  if (!visible) return null;
-  return (
-    <div className="fixed bottom-8 right-8 md:top-32 md:right-8 md:bottom-auto z-40 max-w-xs">
-      <div className="bg-[#D4AF37]/10 backdrop-blur-md border border-[#D4AF37] p-4 rounded-lg shadow-lg relative">
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-[#003366] hover:bg-[#D4AF37]/20 rounded-full p-1"
-        >
-          <X className="w-4 h-4" />
-        </button>
-        <h4 className="font-bold text-[#003366] mb-2 flex items-center gap-2">
-          <AlertCircle className="w-4 h-4" />
-          演示说明
-        </h4>
-        <p className="text-sm text-[#003366]/80 leading-relaxed">
-          此页面仅展示精确匹配逻辑与高级安全校验流程。
-          <br />
-          <br />
-          <strong>尝试输入企业名称 "fail"</strong> 查看未查到记录的状态。
-        </p>
-      </div>
-    </div>
-  );
-}
+/* 注：uat iA 携带的演示模式浮动提示（带"尝试输入 fail"指引），生产环境不需要，已移除 */
 
 export default function CertificateQuery() {
   const [name, setName] = useState("");
@@ -165,7 +138,6 @@ export default function CertificateQuery() {
   const [status, setStatus] = useState<QueryStatus>("idle");
   const [result, setResult] = useState<CertificateResult | null>(null);
   const [captchaOpen, setCaptchaOpen] = useState(false);
-  const [showDemoHint, setShowDemoHint] = useState(true);
 
   const valid = name.trim().length > 0 && code.trim().length > 0;
 
@@ -192,9 +164,6 @@ export default function CertificateQuery() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F8F9FA] text-slate-800">
-      {/* 演示说明浮动提示 */}
-      <DemoHint visible={showDemoHint} onClose={() => setShowDemoHint(false)} />
-
       <main className="flex-grow container mx-auto px-4 py-12 md:py-20 relative">
         <div className="max-w-4xl mx-auto space-y-10">
           {/* ========== 证书查询卡片（uat iA 风格） ========== */}

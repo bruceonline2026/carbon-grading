@@ -364,7 +364,11 @@ def t_visual_checklist():
     check("证书: hero 渐变 from-[#003366] to-[#004d99]", "from-[#003366] to-[#004d99]" in cert)
     check("证书: 标题'证书公开查询'", "证书公开查询" in cert)
     check("证书: 副标题'权威数据 · 实时核验 · 安全可靠'", "权威数据 · 实时核验 · 安全可靠" in cert)
-    check("证书: 演示说明浮动提示", "演示说明" in cert)
+    # 演示说明浮动提示：uat 是 demo 模式带此提示，生产环境不需要——已确认移除
+    check("证书: 无'演示说明'浮动提示（uat demo 模式特有）",
+          "演示说明" not in cert)
+    check("证书: 无 DemoHint 组件残留",
+          "DemoHint" not in cert)
     check("证书: 滑块触发查询按钮", "立即查询" in cert)
     check("证书: 结果卡片 6 字段（评级年度/所属区域/所属行业/评级类型/评级结果）",
           all(x in cert for x in ["评级年度", "所属区域", "所属行业", "评级类型", "评级结果", "评级等级"]))
