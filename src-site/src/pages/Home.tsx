@@ -340,12 +340,10 @@ export default function Home() {
     const scrollToHash = () => {
       const hash = window.location.hash;
       if (!hash) return;
-      const el = document.querySelector(hash);
+      const el = document.querySelector(hash) as HTMLElement | null;
       if (el) {
-        setTimeout(() => {
-          const top = el.getBoundingClientRect().top + window.scrollY - 88;
-          window.scrollTo({ top, behavior: "smooth" });
-        }, 60);
+        // 用 scrollIntoView 配合 CSS scroll-margin-top（已在 index.css 定义）
+        setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
       }
     };
     scrollToHash();
