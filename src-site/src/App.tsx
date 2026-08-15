@@ -1,10 +1,24 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { createBrowserRouter, Navigate, Outlet, useLocation } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import FinancialMarket from "./pages/FinancialMarket";
 import CertificateQuery from "./pages/CertificateQuery";
 import JoinUs from "./pages/JoinUs";
 import About from "./pages/About";
+
+/**
+ * 全局滚动管理：页面之间跳转回到顶部（SPA 默认保留滚动位置）
+ * - pathname 变化（页面切换）→ scrollTo(0,0)
+ * - 仅 hash 变化（首页锚点 /#services 等）不触发 → 由 Home 组件 useEffect 处理锚点滚动
+ */
+function ScrollManager() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return <Outlet />;
+}
 
 /**
  * 路由表（data router 模式）
@@ -15,6 +29,7 @@ import About from "./pages/About";
 export const router = createBrowserRouter([
   {
     path: "/",
+    element: <ScrollManager />,
     children: [
       // 公共 Layout 路由（绝大多数页面）
       {
