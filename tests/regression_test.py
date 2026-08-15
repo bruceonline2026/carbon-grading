@@ -282,7 +282,9 @@ def t_src_site():
               'label: "合作伙伴"' in navbar2 and 'hash: "partners"' in navbar2)
     # Home: 支持 hash 锚点滚动
     home_src = read("src-site/src/pages/Home.tsx") or ""
-    check("Home: hash 锚点滚动支持", "hashchange" in home_src and "scrollTo" in home_src)
+    check("Home: hash 锚点滚动支持（useLocation + scrollIntoView）",
+          "useLocation" in home_src and "location.hash" in home_src
+          and "scrollIntoView" in home_src)
 
     slider = read("src-site/src/components/SliderCaptcha.tsx")
     check("滑块算法常量（240/200/10）", slider is not None and all(

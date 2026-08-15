@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   ArrowRight,
   Award,
@@ -334,22 +334,19 @@ function PartnerSection() {
 /* ================= 首页主组件（原产物 V2） ================= */
 export default function Home() {
   const [products, setProducts] = useState<FinancialProduct[]>(HOME_FALLBACK);
+  const location = useLocation();
 
   // 支持锚点定位（菜单"流程/服务/合作伙伴" → /#process /#services /#partners）
+  // 用 useLocation 监听路由变化（hashchange 事件在 React Router 跳转中不一定会触发）
   useEffect(() => {
-    const scrollToHash = () => {
-      const hash = window.location.hash;
-      if (!hash) return;
-      const el = document.querySelector(hash) as HTMLElement | null;
-      if (el) {
-        // 用 scrollIntoView 配合 CSS scroll-margin-top（已在 index.css 定义）
-        setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
-      }
-    };
-    scrollToHash();
-    window.addEventListener("hashchange", scrollToHash);
-    return () => window.removeEventListener("hashchange", scrollToHash);
-  }, []);
+    const hash = location.hash;
+    if (!hash) return;
+    const el = document.querySelector(hash) as HTMLElement | null;
+    if (el) {
+      // CSS scroll-margin-top 自动补偿 sticky NavBar 高度
+      setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
+    }
+  }, [location.pathname, location.hash]);
 
   useEffect(() => {
     let alive = true;
