@@ -134,7 +134,7 @@ export default function Footer() {
           {/* 桌面端 */}
           <div className="hidden md:block text-center space-y-5">
             <p className="text-gray-400 text-base">
-              © 2026 企业绿色评级系统 · 网站基于 React 源码工程构建（阶段 A/B）
+              © 2026 瑞鼎燊隆（上海）科技有限公司 | 瑞鼎燊隆碳等级评估服务
             </p>
             <div className="flex items-center justify-center gap-6 text-base">
               <a
@@ -143,7 +143,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-[#D4AF37] transition-colors"
               >
-                沪ICP备XXXXXXXX号
+                沪ICP备2025151615号
               </a>
               <span className="text-gray-600">|</span>
               <a
@@ -155,7 +155,7 @@ export default function Footer() {
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1A5319] text-white text-xs font-bold">
                   盾
                 </span>
-                沪公网安备XXXXXXXX号
+                沪公网安备31011502404964号
               </a>
             </div>
             <div className="flex items-center justify-center gap-8 text-base pt-4">
@@ -175,9 +175,9 @@ export default function Footer() {
           {/* 移动端 */}
           <div className="md:hidden flex flex-col gap-6 text-center">
             <p className="text-gray-400 text-sm">
-              © 2026 企业绿色评级系统
+              © 2026 瑞鼎燊隆（上海）科技有限公司
               <br />
-              React 源码工程构建
+              瑞鼎燊隆碳等级评估服务
             </p>
             <a
               href="https://beian.miit.gov.cn/"
@@ -185,7 +185,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-[#D4AF37] transition-colors text-sm"
             >
-              沪ICP备XXXXXXXX号
+              沪ICP备2025151615号
             </a>
             <a
               href="https://www.beian.gov.cn/portal/registerSystemInfo"
@@ -196,7 +196,7 @@ export default function Footer() {
               <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1A5319] text-white text-xs font-bold">
                 盾
               </span>
-              沪公网安备XXXXXXXX号
+              沪公网安备31011502404964号
             </a>
             <div className="flex flex-wrap items-center justify-center gap-5 text-sm pt-4 border-t border-[#1A5319]/30">
               <a href="#" className="text-gray-400 hover:text-[#D4AF37] transition-colors">

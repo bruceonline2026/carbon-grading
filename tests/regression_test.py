@@ -419,8 +419,12 @@ def t_visual_checklist():
           ["快速链接", "服务项目", "联系我们"]) and footer.count("text-[#D4AF37]") >= 4)
     check("Footer: 联系我们 4 项（地址/电话/邮箱）",
           all(x in footer for x in ["400-123-4567", "service@carbon-grading.com", "可持续发展大道"]))
-    check("Footer: 备案区（沪ICP备 + 沪公网安备）",
-          "沪ICP备" in footer and "沪公网安备" in footer)
+    check("Footer: 版权行公司名（瑞鼎燊隆）",
+          "瑞鼎燊隆（上海）科技有限公司" in footer)
+    check("Footer: 版权行业务名（碳等级评估服务）",
+          "瑞鼎燊隆碳等级评估服务" in footer)
+    check("Footer: 备案区真实号码（ICP备 + 公网安备）",
+          "沪ICP备2025151615号" in footer and "沪公网安备31011502404964号" in footer)
     check("Footer: 政策行（隐私政策/服务条款/Cookie政策）",
           all(x in footer for x in ["隐私政策", "服务条款", "Cookie政策"]))
 
