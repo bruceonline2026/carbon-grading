@@ -147,7 +147,7 @@ export default function Footer() {
               </a>
               <span className="text-gray-600">|</span>
               <a
-                href="http://www.beian.gov.cn/portal/registerSystemInfo"
+                href="https://www.beian.gov.cn/portal/registerSystemInfo"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-[#D4AF37] transition-colors inline-flex items-center gap-2"
@@ -188,7 +188,7 @@ export default function Footer() {
               沪ICP备XXXXXXXX号
             </a>
             <a
-              href="http://www.beian.gov.cn/portal/registerSystemInfo"
+              href="https://www.beian.gov.cn/portal/registerSystemInfo"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-[#D4AF37] transition-colors text-sm inline-flex items-center justify-center gap-2"
