@@ -134,28 +134,15 @@ async function tryIssue(caName, opts) {
   log(`   PFX:  ${pfxFile}（密码 ${PFX_PASSWORD}）`);
 
   log(`导入 IIS 证书库（LocalMachine\\My）...`);
+  const { execSync } = require('child_process');
   execSync(`certutil -f -p "${PFX_PASSWORD}" -importPFX "${pfxFile}" NoRoot`, { cwd: __dirname });
-  const thumbprint = execSync(`powershell -NoProfile -Command "(Get-ChildItem Cert:\\LocalMachine\\My | Where-Object { $_.Subject -match 'CN=${DOMAIN}' } | Sort-Object NotAfter -Descending | Select-Object -First 1).Thumbprint"`).toString().trim();
+  const thumbprint = execSync(`powershell -NoProfile -Command "(Get-ChildItem Cert:\\LocalMachine\\My | Where-Object { $_.Subject -match 'CN=${DOMAIN}' -and $_.Issuer -notmatch 'CN=${DOMAIN}' } | Sort-Object NotAfter -Descending | Select-Object -First 1).Thumbprint"`).toString().trim();
   log(`   Thumbprint: ${thumbprint}`);
 
-  log(`绑定 IIS Test 网站（替换现有 https 绑定）...`);
-  const siteName = 'Test';
-  const oldBindings = execSync(`powershell -NoProfile -Command "Get-WebBinding -Name '${siteName}' -Protocol https -HostHeader '${DOMAIN}' | ForEach-Object { $_.BindingInformation }"`, { stdio: 'pipe' }).toString().trim().split('\n').filter(Boolean);
-  for (const b of oldBindings) {
-    try { execSync(`powershell -NoProfile -Command "Remove-WebBinding -Name '${siteName}' -BindingInformation '${b.trim()}'"`); } catch {}
-  }
-  execSync(`powershell -NoProfile -Command "New-WebBinding -Name '${siteName}' -Protocol https -Port 443 -HostHeader '${DOMAIN}' -SslFlags 1"`);
-  execSync(`powershell -NoProfile -Command "Get-WebBinding -Name '${siteName}' -Protocol https -HostHeader '${DOMAIN}' | Add-SslCertificate -Thumbprint '${thumbprint}' -StoreName My -Location LocalMachine"`);
-  // netsh 全局兜底
-  try {
-    execSync(`netsh http delete sslcert ipport=0.0.0.0:443 2>nul`);
-  } catch {}
-  execSync(`netsh http add sslcert ipport=0.0.0.0:443 certhash=${thumbprint} appid={2147E514-1234-5678-90AB-CDEF12345678} certstorename=MY`);
+  log(`绑定 IIS Test 网站（IISAdministration + netsh）...`);
+  execSync(`powershell -NoProfile -ExecutionPolicy Bypass -File "${__dirname.replace(/\//g, '\\\\')}\\bind-cert.ps1" ${thumbprint}`, { cwd: __dirname });
 
-  log(`配置 HTTP→HTTPS 重定向...`);
-  execSync(`powershell -NoProfile -Command "Set-WebConfigurationProperty -Filter '/system.webServer/httpRedirect' -Name 'enabled' -Value 'true' -PSPath 'IIS:\\Sites\\${siteName}'"`);
-  execSync(`powershell -NoProfile -Command "Set-WebConfigurationProperty -Filter '/system.webServer/httpRedirect' -Name 'destination' -Value 'https://${DOMAIN}/' -PSPath 'IIS:\\Sites\\${siteName}'"`);
-
+  log(`配置 HTTP→HTTPS 重定向（web.config 已有 301 规则，跳过）...`);
   writeExit(`OK ${caName}`);
 }
 
