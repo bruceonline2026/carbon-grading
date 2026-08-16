@@ -1,0 +1,55 @@
+name: Regression
+
+# ============================================================
+# 企业绿色评级系统 · 回归测试 CI
+# 触发：push 到 main / PR 到 main
+# 内容：
+#   1. 静态回归测试（tests/regression_test.py，黄金基线 + 视觉 checklist）
+#   2. src-site 构建验证（npm run build，防止构建错误进 main）
+# ============================================================
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # ========== 回归测试（黄金基线 + 视觉 checklist + 线上可达性）==========
+      - name: Run regression tests
+        run: python3 tests/regression_test.py
+        working-directory: ${{ github.workspace }}
+
+      # ========== 构建验证（src-site TypeScript + Vite）==========
+      - name: Build src-site
+        run: |
+          cd src-site
+          npm ci
+          npm run build
+        working-directory: ${{ github.workspace }}
+
+      # ========== 汇总 ==========
+      - name: Summary
+        run: |
+          echo "✅ 回归测试通过"
+          echo "✅ src-site 构建通过"
+          echo "资源哈希（本次构建产物）:"
+          ls -la src-site/dist/assets/ | tail -5
