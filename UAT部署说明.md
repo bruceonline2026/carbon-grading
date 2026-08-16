@@ -1,7 +1,10 @@
-# UAT 环境部署说明（RDP 手动部署）
+# UAT 环境部署说明（自动化 + 手动）
 
-> 部署包：`deploy-uat-20260811.zip`（192KB，2026-08-11 构建）
-> 本次变更：join-us 加入我们页面改为「顶部导航 + 左侧权益 + 右侧表单」三段式布局
+> 部署包：`deploy-uat-20260817.zip`（由 `tools/build_uat_package.py` 构建）
+> 本次变更：
+> - 阶段 A/B/C 全部源码工程产物（首页、金融超市、证书查询、加入我们、关于我们）
+> - Footer 底部对齐 uat：真实备案号 + 官方公安备案图标 + 跳转自动填充 recordcode
+> - 新增 `tools/deploy_uat_server.ps1`：服务器端一键自动备份、解压、验证
 
 ---
 
@@ -11,106 +14,100 @@
 |------|-----|
 | UAT 目标机 | `47.116.206.131`（Windows + IIS 10） |
 | 登录账号 | `Dev_Deploy` |
+| 密码 | `XuPeng!2026` |
 | 登录方式 | 远程桌面（RDP，端口 3389） |
 | 网站域名 | 通过 IIS 站点访问，80 端口 |
-
-**工具选择（按你的电脑系统）：**
-- **Windows 电脑**：开始菜单 → 搜索 `mstsc`（远程桌面连接）
-- **Mac 电脑**：Mac App Store 安装「Microsoft Remote Desktop」，新建连接填入 `47.116.206.131`
+| 网站根目录 | `C:\inetpub\wwwroot`（若不同请修改脚本参数） |
 
 ---
 
-## 二、远程登录目标机
+## 二、推荐方式：服务器端一键脚本（2 分钟）
 
-1. 打开远程桌面，地址填 `47.116.206.131`，点连接
-2. 用户名填 `Dev_Deploy`，密码填 `XuPeng!2026`
-3. 如提示证书不受信任，勾选「不再询问」并点「是」继续
-4. 登录成功后，你看到的是 Windows 服务器桌面
+### 1. 把部署包传到服务器
 
----
-
-## 三、找到 IIS 网站根目录（关键步骤）
-
-网站文件放在 IIS 的**物理路径**里，按下面任一种方法找到：
-
-**方法 A（推荐，最直观）：**
-1. 服务器上打开「Internet Information Services (IIS) 管理器」
-   （开始菜单搜索 `inetmgr` 或 IIS）
-2. 左侧展开：**服务器名 → 网站（Sites）**
-3. 找到网站（可能是 `carbon-grading`、`Default Web Site` 或类似名称）
-4. **右键网站 → 管理网站 → 浏览** 或 右侧点「**基本设置** / 高级设置」，查看「**物理路径**」
-5. 常见路径：`C:\inetpub\wwwroot`
-
-**方法 B：**
-1. 打开「此电脑」，进入 `C:\inetpub\wwwroot`
-2. 确认里面有 `index.html`、`assets` 文件夹——这里就是站点根目录
-
-> ⚠️ 站点根目录的判断标准：里面能看到 `index.html` 和 `assets` 文件夹，且这个 index.html 打开就是绿色评级系统首页。
-
----
-
-## 四、备份现有文件（重要，出问题可回滚）
-
-在网站根目录**同级**（比如 `C:\inetpub\` 下）新建文件夹 `backup-20260811`，然后把网站根目录里的以下内容**复制**进去备份：
+RDP 登录后，把 `deploy-uat-20260817.zip` 放到服务器任意位置，例如：
 
 ```
-index.html
-assets 整个文件夹
-join-us 整个文件夹（如果有）
+C:\Users\Public\deploy-uat-20260817.zip
+```
+
+### 2. 以管理员身份运行 PowerShell，执行
+
+```powershell
+C:\Users\Public\deploy_uat_server.ps1 -ZipPath "C:\Users\Public\deploy-uat-20260817.zip"
+```
+
+脚本会自动完成：
+1. 备份现有站点到 `C:\inetpub\backup-uat-<时间戳>`
+2. 清空 `C:\inetpub\wwwroot`（保留 backup 目录）
+3. 解压部署包到网站根目录
+4. 验证 4 个关键路径：首页、金融超市、证书查询、加入我们，全部 HTTP 200
+
+### 3. 如果网站根目录不是默认路径
+
+```powershell
+C:\Users\Public\deploy_uat_server.ps1 `
+  -ZipPath "C:\Users\Public\deploy-uat-20260817.zip" `
+  -WebRoot "D:\WebRoot\uat"
 ```
 
 ---
 
-## 五、解压部署包覆盖
+## 三、回滚
 
-1. 把 `deploy-uat-20260811.zip` 传到服务器上
-   （远程桌面里：复制本机文件 → 在服务器窗口粘贴，或直接拖拽文件进远程桌面窗口）
-2. 在服务器上**解压**到网站根目录，**覆盖**同名文件：
-   - `index.html` → 覆盖
-   - `web.config` → 覆盖（**新增**，修复 pathname 路由刷新 404）
-   - `assets\` → 覆盖（含 config.js / index.js / index.css）
-   - `join-us\` → 覆盖（含 index.html）
-3. 确认解压后网站根目录结构与下面一致：
+脚本已自动创建备份目录，例如 `C:\inetpub\backup-uat-20260817-143022`。
+
+如果部署后需要回滚，把备份目录里的内容复制回网站根目录覆盖即可：
+
+```powershell
+$backup = "C:\inetpub\backup-uat-20260817-143022"
+$webroot = "C:\inetpub\wwwroot"
+Get-ChildItem $backup -Force | Copy-Item -Destination $webroot -Recurse -Force
+```
+
+---
+
+## 四、手动部署方式（备用）
+
+如果一键脚本无法运行，按以下步骤手动操作：
+
+1. **备份**：复制 `C:\inetpub\wwwroot` 里的 `index.html`、`assets`、`join-us` 到备份目录。
+2. **清理**：删除上述文件/文件夹。
+3. **解压**：把 `deploy-uat-20260817.zip` 解压到 `C:\inetpub\wwwroot`，覆盖同名文件。
+4. **确认目录结构**：
 
 ```
 网站根目录/
-├── index.html          ← 已更新
-├── web.config          ← 新增（IIS SPA fallback 规则）
+├── index.html
+├── web.config          ← 必须有（SPA fallback + HTTP→HTTPS 跳转）
 ├── assets/
-│   ├── config.js       ← 已更新
-│   ├── index.js        ← 已更新
-│   ├── index.css       ← 已更新
-│   └── (备份文件 .bak/.orig 不需要上传)
+│   ├── config.js
+│   ├── index.js
+│   └── index.css
 └── join-us/
-    └── index.html      ← 已更新（8 项菜单完整版）
+    └── index.html
 ```
 
-> ⚠️ **关于 web.config**：依赖 IIS **URL Rewrite 模块**（IIS 10 默认已装）。若解压后访问任意 SPA 子路由（如 `/financial-supermarket`）报 **500.19 错误**，说明 IIS 缺少该模块，请先在服务器上下载运行安装包 `url_rewrite`，或联系运维安装 `Microsoft URL Rewrite Module for IIS`。
+5. **验证浏览器访问**：
+   - http://47.116.206.131/
+   - http://47.116.206.131/financial-supermarket
+   - http://47.116.206.131/certificate-query
+   - http://47.116.206.131/join-us/
+
+> ⚠️ 若访问子路由报 500.19 错误，说明 IIS 缺少 URL Rewrite 模块，请联系运维安装 Microsoft URL Rewrite Module for IIS。
 
 ---
 
-## 六、部署后验证
+## 五、生成新的部署包
 
-在浏览器打开目标机站点，逐项检查：
+开发端运行：
 
-| # | 检查项 | 期望结果 |
-|---|--------|----------|
-| 1 | 首页 `http://47.116.206.131/` | 正常显示绿色评级系统首页，无白屏 |
-| 2 | 证书查询页 `http://47.116.206.131/certificate-query` | 页面 200，非 404（SPA 路由正常） |
-| 3 | 金融超市 `http://47.116.206.131/financial-supermarket` | 页面 200，产品列表正常 |
-| 4 | 加入我们 `http://47.116.206.131/join-us/` | **顶部导航 8 项菜单 + 左侧合作伙伴权益 + 右侧申请表** 三段式完整 |
-| 5 | 金融市场 `http://47.116.206.131/financial-supermarket` | **不再报 404**（web.config SPA fallback 生效），页面正常 |
-| 6 | 证书查询 `http://47.116.206.131/certificate-query` | **不再报 404**，页面正常 |
-| 7 | 加入我们页面顶部「登录」「指标申报」链接 | 跳转到企业后台系统 |
+```bash
+python tools/build_uat_package.py
+```
 
-> 💡 若浏览器有缓存看不到新页面：按 `Ctrl+F5`（Mac 是 `Cmd+Shift+R`）强制刷新。
+该脚本会执行 `npm run build` 并打包 `dist/` + `join-us/` + `web.config` + 部署脚本，生成 `deploy-uat-<日期>.zip`。
 
 ---
 
-## 七、出问题怎么办（回滚）
-
-如果部署后页面异常，把**第四步备份**的 `backup-20260811` 文件夹内容复制回网站根目录覆盖即可恢复原状。
-
----
-
-*生成时间：2026-08-11 · 部署包：deploy-uat-20260811.zip*
+*生成时间：2026-08-17 · 部署包：deploy-uat-20260817.zip*
