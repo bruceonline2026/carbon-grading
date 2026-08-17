@@ -39,6 +39,22 @@ def build():
     run([npm, "run", "build"], cwd=SRC_SITE)
 
 
+SKIP_FILES = {".DS_Store", "Thumbs.db", ".gitignore"}
+
+
+def collect_files(base_dir, arc_prefix=""):
+    out = []
+    for root, _dirs, files in os.walk(base_dir):
+        for f in files:
+            if f in SKIP_FILES:
+                continue
+            full = os.path.join(root, f)
+            rel = os.path.relpath(full, base_dir).replace(os.sep, "/")
+            arc = f"{arc_prefix}/{rel}" if arc_prefix else rel
+            out.append((full, arc))
+    return out
+
+
 def make_package():
     today = datetime.now().strftime("%Y%m%d")
     zip_name = f"deploy-uat-{today}.zip"
@@ -46,19 +62,10 @@ def make_package():
     if os.path.exists(zip_path):
         os.remove(zip_path)
 
-    files_to_add = []
-    for root, _dirs, files in os.walk(DIST):
-        for f in files:
-            full = os.path.join(root, f)
-            arc = os.path.relpath(full, DIST)
-            files_to_add.append((full, arc))
+    files_to_add = collect_files(DIST)
 
     if os.path.isdir(JOIN_US):
-        for root, _dirs, files in os.walk(JOIN_US):
-            for f in files:
-                full = os.path.join(root, f)
-                arc = os.path.relpath(full, ROOT)
-                files_to_add.append((full, arc))
+        files_to_add.extend(collect_files(JOIN_US, arc_prefix="join-us"))
 
     for src, arc in [(WEB_CONFIG, "web.config"), (PS1, "deploy_uat_server.ps1"), (README, "UAT部署说明.md")]:
         if os.path.exists(src):
