@@ -28,9 +28,11 @@ export default function NavBar() {
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 shrink-0">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#1A5319] to-[#003366] flex items-center justify-center">
-            <span className="text-white font-bold text-xl">绿评</span>
-          </div>
+          <img
+            src="/images/site-logo.png"
+            alt="绿评"
+            className="w-12 h-12 rounded-full object-cover"
+          />
           <div className="leading-tight">
             <div className="text-[#003366] font-bold text-xl">企业绿色评级系统</div>
             <div className="text-xs text-gray-500">专业可持续发展评估</div>

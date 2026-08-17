@@ -174,8 +174,9 @@ def t_styles():
         return
     checks = [
         ("header 高度 h-20（与首页一致）", "h-20" in html),
-        ("Logo 圆形框 rounded-full", "rounded-full bg-gradient" in html),
-        ("Logo 绿→深蓝渐变", "from-[#1A5319] to-[#003366]" in html),
+        ("Logo 使用 /images/site-logo.png", "/images/site-logo.png\"" in html),
+        ("Logo 圆形 object-cover", "rounded-full object-cover" in html),
+        ("favicon 使用 /favicon.png", "link rel=\"icon\" type=\"image/png\" href=\"/favicon.png\"" in html),
         ("标题字号 text-xl", "font-bold text-xl text-[#003366]" in html),
         ("菜单间距 gap-8", "gap-8" in html),
         ("无 ml-auto（菜单与登录按钮留距）", "ml-auto" not in html),
