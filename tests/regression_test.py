@@ -174,6 +174,7 @@ def t_styles():
         return
     checks = [
         ("header 高度 h-20（与首页一致）", "h-20" in html),
+        ("引用 /config.js 环境配置（按域名自适应）", 'src="/config.js"' in html),
         ("Logo 使用 /images/site-logo.png", "/images/site-logo.png\"" in html),
         ("Logo 圆形 object-cover", "rounded-full object-cover" in html),
         ("favicon 使用 /favicon.png", "link rel=\"icon\" type=\"image/png\" href=\"/favicon.png\"" in html),

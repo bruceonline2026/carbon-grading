@@ -237,12 +237,21 @@
   </main>
 
   <!-- ============== 配置 & 行为脚本 ============== -->
-  <script src="../assets/config.js"></script>
+  <script src="/config.js"></script>
   <script>
-    /* 动态配置：菜单跳转与外链（严格与官网首页一致：8 项 + 登录） */
+    /* 动态配置：菜单跳转与外链（与 React 主页 NavBar 行为一致——按当前域名自适应环境） */
     (function(){
-      var cg  = (window.__cgUrl__  || "https://uat.carbon-grading.com").replace(/\/+$/, "");
-      var ent = (window.__entUrl__ || window.__apiUrl__ || "https://uat-enterprise.carbon-grading.com").replace(/\/+$/, "");
+      /* 兜底：根据当前 hostname 自适应（与 public/config.js 逻辑保持一致），避免硬编码 uat */
+      var origin = window.location.origin.replace(/\/+$/, "");
+      var fallbackCg  = origin;
+      var fallbackEnt = "https://uat-enterprise.carbon-grading.com";
+      if (window.location.hostname.indexOf("carbon-grading.com") !== -1) {
+        fallbackEnt = "https://uat-enterprise.carbon-grading.com";
+      } else if (window.location.hostname.indexOf("tiici.com") !== -1) {
+        fallbackEnt = "https://uat-enterprise.carbon-grading.com"; /* test 后端未部署，临时连 uat */
+      }
+      var cg  = (window.__cgUrl__  || fallbackCg).replace(/\/+$/, "");
+      var ent = (window.__entUrl__ || window.__apiUrl__ || fallbackEnt).replace(/\/+$/, "");
       // 官网首页用的是混合路由：pathname 路由 + hash 路由
       var links = {
         "nav-home-logo":   cg + "/#home",                 // Logo → 官网首页
