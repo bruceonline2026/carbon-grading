@@ -170,7 +170,7 @@ export default function CertificateQuery() {
           <section className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             {/* Hero header：深蓝渐变 + 透明纹理 */}
             <div className="bg-gradient-to-r from-[#003366] to-[#004d99] p-8 text-center text-white relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
+              <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('/images/cubes.png')]" />
               <h1 className="text-3xl font-bold mb-2 relative z-10">证书公开查询</h1>
               <p className="text-blue-100 relative z-10">权威数据 · 实时核验 · 安全可靠</p>
             </div>

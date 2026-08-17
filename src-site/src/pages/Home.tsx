@@ -23,7 +23,7 @@ const HOME_FALLBACK: FinancialProduct[] = [
   { id: 3, title: "ESG卓越融资", bank: "未来地球银行", rate: "年利率 2.9%", rateLabel: "", type: "", requiredRating: "", amount: "", description: "为顶级绿色企业提供优惠利率。AAA评级企业专享，享受行业最低利率和优先服务。", features: ["最低利率", "优先服务", "全球通用"], iconType: "supply-chain", color: "#1A5319", hot: false },
 ];
 
-const BANNER_URL = "https://carbon-public-visit.oss-cn-shanghai.aliyuncs.com/banner/banner5.jpg";
+const BANNER_URL = "/images/banner5.jpg";
 
 /* ================= hero（原产物 L2 组件） ================= */
 function Hero() {
@@ -250,7 +250,7 @@ function ValueSection() {
 
 /* ================= 合作机构（原产物 I2 组件） ================= */
 const PARTNERS = [
-  { nameCN: "上海环境能源交易所", nameEN: "Shanghai Environment and Energy Exchange", abbreviation: "SEEE", logo: "https://carbon-public-visit.oss-cn-shanghai.aliyuncs.com/seee_logo.png" },
+  { nameCN: "上海环境能源交易所", nameEN: "Shanghai Environment and Energy Exchange", abbreviation: "SEEE", logo: "/images/seee_logo.png" },
   { nameCN: "中国节能协会", nameEN: "China Energy Conservation Association (CECA)", abbreviation: "CECA" },
   { nameCN: "SGS", nameEN: "SGS SA", abbreviation: "SGS" },
   { nameCN: "中国农业银行", nameEN: "Agricultural Bank of China (ABC)", abbreviation: "ABC" },

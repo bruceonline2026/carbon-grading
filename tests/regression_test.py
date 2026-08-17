@@ -336,7 +336,7 @@ def t_visual_checklist():
     slider = read("src-site/src/components/SliderCaptcha.tsx") or ""
 
     # ---- 首页：hero 与 5 区块 ----
-    check("首页: hero 阿里OSS背景图", "carbon-public-visit.oss-cn-shanghai.aliyuncs.com/banner/banner5.jpg" in home)
+    check("首页: hero 背景图为本地 /images/banner5.jpg", "/images/banner5.jpg" in home)
     check("首页: hero 标题'绿色评级，定义未来价值'", "绿色评级，" in home and "定义未来价值" in home)
     check("首页: hero 副标题'基于国家标准与AI大数据'", "基于国家标准与AI大数据" in home)
     check("首页: hero CTA'立即注册'", "立即注册" in home)
@@ -347,6 +347,7 @@ def t_visual_checklist():
     check("首页: 区块'合作机构'", "合作机构" in home)
     for p in ["上海环境能源交易所", "中国农业银行", "平安财产保险", "太平洋财产保险"]:
         check(f"首页: 合作机构 {p}", p in home)
+    check("首页: 合作机构 SEEE logo 本地路径", "/images/seee_logo.png" in home)
 
     # ---- 金融超市（uat B2 结构） ----
     check("金融: hero 深蓝到深绿渐变 from-[#003366] to-[#1A5319]", "from-[#003366]" in fm and "to-[#1A5319]" in fm)
@@ -383,6 +384,7 @@ def t_visual_checklist():
     check("证书: hero 渐变 from-[#003366] to-[#004d99]", "from-[#003366] to-[#004d99]" in cert)
     check("证书: 标题'证书公开查询'", "证书公开查询" in cert)
     check("证书: 副标题'权威数据 · 实时核验 · 安全可靠'", "权威数据 · 实时核验 · 安全可靠" in cert)
+    check("证书: 透明纹理背景图为本地 /images/cubes.png", "/images/cubes.png" in cert)
     # 演示说明浮动提示：uat 是 demo 模式带此提示，生产环境不需要——已确认移除
     check("证书: 无'演示说明'浮动提示（uat demo 模式特有）",
           "演示说明" not in cert)
@@ -431,6 +433,7 @@ def t_visual_checklist():
     # ---- 滑块算法常量 ----
     check("滑块: 阈值常量 240/200/10", all(x in slider for x in
           ["TRACK_PX = 240", "TARGET_PX = 200", "TOLERANCE = 10"]))
+    check("滑块: 背景图为本地 /images/slider-bg.jpg", "/images/slider-bg.jpg" in slider)
 
 
 # ============================================================

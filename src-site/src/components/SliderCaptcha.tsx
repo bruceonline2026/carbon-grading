@@ -23,8 +23,7 @@ const TRACK_PX = 240; // 轨道总长
 const TARGET_PX = 200; // 缺口位置
 const TOLERANCE = 10; // 容差
 
-const BG_URL =
-  "https://images.unsplash.com/photo-1674916251976-b64824a5f3de?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400";
+const BG_URL = "/images/slider-bg.jpg";
 
 export default function SliderCaptcha({ open, onClose, onSuccess }: SliderCaptchaProps) {
   const [pos, setPos] = useState(0); // 滑块位置（百分比 0-100）
