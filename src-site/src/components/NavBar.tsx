@@ -3,7 +3,7 @@ import { enterpriseUrl } from "../config";
 
 /** 导航菜单项（与官网一致 8 项；无当前页高亮，hover 变色）
  * 流程/服务/合作伙伴为首页锚点（/#process /#services /#partners），不是独立页面 */
-const NAV_ITEMS: { label: string; to?: string; hash?: string; external?: string }[] = [
+const NAV_ITEMS: { label: string; to?: string; hash?: string; external?: string; externalSelf?: boolean }[] = [
   { label: "首页", to: "/" },
   { label: "金融市场", to: "/financial-supermarket" },
   { label: "证书查询", to: "/certificate-query" },
@@ -11,7 +11,7 @@ const NAV_ITEMS: { label: string; to?: string; hash?: string; external?: string 
   { label: "流程", to: "/", hash: "process" },
   { label: "服务", to: "/", hash: "services" },
   { label: "合作伙伴", to: "/", hash: "partners" },
-  { label: "加入我们", to: "/join-us" },
+  { label: "加入我们", external: "/join-us/", externalSelf: true },
 ];
 
 /**
@@ -46,7 +46,7 @@ export default function NavBar() {
               <a
                 key={item.label}
                 href={item.external}
-                target="_blank"
+                target={item.externalSelf ? undefined : "_blank"}
                 rel="noopener noreferrer"
                 className="text-gray-700 font-medium hover:text-[#1A5319] transition-colors"
               >

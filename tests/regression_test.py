@@ -261,7 +261,10 @@ def t_src_site():
     # 独立路由（不再包含 process/services/partners —— 它们是首页锚点）
     check("App.tsx 存在且含独立路由", app is not None and all(
         f'path: "{p}"' in app for p in
-        ["financial-supermarket", "certificate-query", "join-us", "about"]))
+        ["financial-supermarket", "certificate-query", "about"]))
+    if app:
+        # 加入我们是独立静态页（join-us/index.html），不走 React 路由（防双页面字体不一致）
+        check("App.tsx 无 join-us React 路由（静态页专用）", 'path: "join-us"' not in app)
     if app:
         # 流程/服务/合作伙伴不是独立路由
         check("App.tsx 无 /process 独立路由（首页锚点）", 'path: "process"' not in app)
@@ -305,8 +308,8 @@ def t_src_site():
                                 "绿色债券发行支持", "碳中和转型基金", "绿能抵押融资", "小微绿色直通车",
                                 "碳减排支持工具对接贷款", "可再生能源项目债券", "ESG主题投资基金", "绿色供应链金融"]))
 
-    joinus = read("src-site/src/pages/JoinUs.tsx")
-    check("合作申请 10 字段", joinus is not None and all(
+    joinus = read("join-us/index.html")
+    check("合作申请 10 字段（静态页 join-us/index.html）", joinus is not None and all(
         x in joinus for x in ["EnterpriseName", "EnterpriseCode", "Linkman", "Post",
                               "Tel", "EMail", "OfficiaWebsiteUrl", "Memo", "OrgType", "Region"]))
 
@@ -331,7 +334,7 @@ def t_visual_checklist():
     home = read("src-site/src/pages/Home.tsx") or ""
     fm = read("src-site/src/pages/FinancialMarket.tsx") or ""
     cert = read("src-site/src/pages/CertificateQuery.tsx") or ""
-    join = read("src-site/src/pages/JoinUs.tsx") or ""
+    join = read("join-us/index.html") or ""
     footer = read("src-site/src/components/Footer.tsx") or ""
     navbar = read("src-site/src/components/NavBar.tsx") or ""
     slider = read("src-site/src/components/SliderCaptcha.tsx") or ""
@@ -404,7 +407,7 @@ def t_visual_checklist():
           ["官方授权资质", "专属数据平台", "专业培训支持", "业务协同资源", "市场推广赋能"]))
     # 加入我们：标题区为白底小标签+大标题+长副标题（uat 风格，无渐变 hero）
     check("加入: 标题区小标签'合作伙伴招募'",
-          "合作伙伴招募" in join and "▸" in join)
+          "合作伙伴招募" in join and ("▸" in join or "svg" in join))
     check("加入: 标题长副标题（诚邀具备专业资质...）",
           "诚邀具备专业资质的咨询机构" in join)
     check("加入: 无深蓝到深绿渐变 hero header（改为白底）",

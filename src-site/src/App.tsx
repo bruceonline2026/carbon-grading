@@ -4,7 +4,6 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import FinancialMarket from "./pages/FinancialMarket";
 import CertificateQuery from "./pages/CertificateQuery";
-import JoinUs from "./pages/JoinUs";
 import About from "./pages/About";
 
 /**
@@ -37,7 +36,6 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <Home /> },
           { path: "certificate-query", element: <CertificateQuery /> },
-          { path: "join-us", element: <JoinUs /> },
           { path: "about", element: <About /> },
         ],
       },
