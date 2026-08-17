@@ -23,12 +23,16 @@ export function ProductIcon({ type, className }: { type: FinancialProduct["iconT
   }
 }
 
-/** 产品卡片（首页 + 金融超市复用；风格对齐原产物） */
-export default function ProductCard({ p }: { p: FinancialProduct }) {
+/** 产品卡片（首页 + 金融超市复用；风格对齐原产物）
+ *  若传入 index，头部按深蓝(#003366)/深绿(#1A5319)交替，与金融超市 B2ProductCard 保持一致
+ */
+export default function ProductCard({ p, index }: { p: FinancialProduct; index?: number }) {
+  const headerColor =
+    index !== undefined ? (index % 2 === 1 ? "#1A5319" : "#003366") : p.color;
   return (
     <div className="bg-white rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100">
       {/* 头部色块 */}
-      <div className="p-6 text-white" style={{ background: `linear-gradient(135deg, ${p.color} 0%, ${p.color}dd 100%)` }}>
+      <div className="p-6 text-white" style={{ background: `linear-gradient(135deg, ${headerColor} 0%, ${headerColor}dd 100%)` }}>
         <div className="flex items-center justify-between mb-4">
           <ProductIcon type={p.iconType} className="w-10 h-10" />
           <div className="text-right">

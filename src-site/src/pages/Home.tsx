@@ -77,8 +77,8 @@ function GreenFinance({ products }: { products: FinancialProduct[] }) {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">来自合作金融机构的专属融资产品</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
-          {products.map((p) => (
-            <ProductCard key={p.id} p={p} />
+          {products.map((p, i) => (
+            <ProductCard key={p.id} p={p} index={i} />
           ))}
         </div>
         <div className="text-center mt-12">
