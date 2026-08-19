@@ -127,12 +127,12 @@ function ProcessSection() {
                   >
                     <div
                       className={
-                        "w-32 h-32 rounded-full flex items-center justify-center mb-6 shadow-xl relative z-10 transition-all duration-300 " +
+                        "w-40 h-40 rounded-full flex items-center justify-center mb-6 shadow-xl relative z-10 transition-all duration-300 " +
                         (i % 2 === 0 ? "bg-[#1A5319]" : "bg-[#003366]") +
                         (hovered === i ? " shadow-2xl scale-110 ring-4 ring-[#4ADE80]/30" : "")
                       }
                     >
-                      <step.icon className="w-12 h-12 text-white" />
+                      <step.icon className="w-14 h-14 text-white" />
                     </div>
                     <div className="text-sm font-semibold text-[#D4AF37] mb-2">第 {i + 1} 步</div>
                     <h4
@@ -161,7 +161,7 @@ function ProcessSection() {
                     </div>
                   </div>
                   {i < PROCESS_STEPS.length - 1 && (
-                    <div className="absolute top-16 -right-4 z-0 hidden xl:block">
+                    <div className="absolute top-20 -right-4 z-0 hidden xl:block">
                       <ChevronDown className="w-8 h-8 text-[#D4AF37] rotate-[-90deg]" />
                     </div>
                   )}
@@ -176,11 +176,11 @@ function ProcessSection() {
                 <div className="flex items-start gap-4">
                   <div
                     className={
-                      "w-16 h-16 rounded-full flex items-center justify-center shadow-lg flex-shrink-0 " +
+                      "w-20 h-20 rounded-full flex items-center justify-center shadow-lg flex-shrink-0 " +
                       (i % 2 === 0 ? "bg-[#1A5319]" : "bg-[#003366]")
                     }
                   >
-                    <step.icon className="w-8 h-8 text-white" />
+                    <step.icon className="w-10 h-10 text-white" />
                   </div>
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-[#D4AF37] mb-1">第 {i + 1} 步</div>

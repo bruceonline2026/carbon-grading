@@ -349,6 +349,8 @@ def t_visual_checklist():
     check("首页: hero 链接到 EnterpriseRegistration", "EnterpriseRegistration@1" in home)
     check("首页: 区块'绿色金融服务'", "绿色金融服务" in home)
     check("首页: 区块'流程化评级体系'", "流程化评级体系" in home)
+    check("首页: 流程四圈放大 w-40（与价值主张框匹配）", "w-40 h-40 rounded-full" in home)
+    check("首页: 流程四圈图标 w-14", "w-14 h-14 text-white" in home)
     check("首页: 区块'核心价值主张'", "核心价值主张" in home)
     check("首页: 区块'合作机构'", "合作机构" in home)
     for p in ["上海环境能源交易所", "中国农业银行", "平安财产保险", "太平洋财产保险"]:
