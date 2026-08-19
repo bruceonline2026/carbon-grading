@@ -184,6 +184,16 @@ def t_styles():
         ("两栏布局 grid-cols-5 gap-10", "lg:grid-cols-5 gap-10" in html),
         ("权益卡片渐变（绿→深蓝）", "from-[#1A5319] to-[#003366] rounded-2xl" in html),
         ("无深蓝 hero 残留（应白底导航）", "from-[#003366] to-[#0a2a52]" not in html),
+        # ---- 页尾（与首页 Footer 一致）----
+        ("页尾: 深蓝背景 bg-[#003366]", '<footer class="bg-[#003366] text-white py-20">' in html),
+        ("页尾: 4 列金色小标题（快速链接/服务项目/联系我们）",
+         html.count('text-[#D4AF37]">') >= 4),
+        ("页尾: 快速链接 5 项", all(x in html for x in ["关于我们", "评级方法", "金融产品", "合作网络", "资源中心"])),
+        ("页尾: 服务项目 5 项", all(x in html for x in ["ESG评估", "碳足迹分析", "绿色认证", "金融匹配", "合规支持"])),
+        ("页尾: 联系我们 3 项", all(x in html for x in ["400-123-4567", "service@carbon-grading.com", "可持续发展大道"])),
+        ("页尾: 备案号（ICP备 + 公网安备）", "沪ICP备2025151615号" in html and "沪公网安备31011502404964号" in html),
+        ("页尾: 政策行（隐私政策/服务条款/Cookie政策）", all(x in html for x in ["隐私政策", "服务条款", "Cookie政策"])),
+        ("页尾: Footer 链接动态配置（foot-q/foot-s）", "foot-q1" in html and "foot-s1" in html),
     ]
     for name, cond in checks:
         check(name, cond)
