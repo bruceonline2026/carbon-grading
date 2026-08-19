@@ -72,9 +72,9 @@ def t_syntax():
 # ============================================================
 # 3. 菜单黄金基线（join-us 顶部导航）
 # ============================================================
-MENU_REQUIRED = ["首页", "金融市场", "证书查询", "指标申报",
-                 "流程", "服务", "合作伙伴", "加入我们"]
-MENU_FORBIDDEN = ["能源计算", "演示说明"]
+MENU_REQUIRED = ["首页", "金融市场", "证书查询",
+                 "评级流程", "价值主张", "合作伙伴", "加入我们"]
+MENU_FORBIDDEN = ["能源计算", "演示说明", "指标申报"]
 
 def t_menu():
     print("\n[3/10] 菜单黄金基线（join-us 顶部导航）")
@@ -100,7 +100,6 @@ def t_nav_links():
     html = read("join-us/index.html")
     if html is None:
         return
-    check("指标申报→企业后台外链配置", '/App/Enterprise' in html)
     check("登录→企业后台外链配置", 'nav-login' in html and '/App/Enterprise' in html)
     check("官网 hash 路由（/#home 等）", '#home' in html and '#process' in html and '#partners' in html)
 
@@ -276,15 +275,16 @@ def t_src_site():
         layout_idx = app.find('element: <Layout />')
         check("金融超市: 独立路由（不通过 Layout 包裹）",
               fs_idx > 0 and layout_idx > 0 and fs_idx > layout_idx)
-    # NavBar: 流程/服务/合作伙伴为首页锚点（hash 跳转）
+    # NavBar: 评级流程/价值主张/合作伙伴为首页锚点（hash 跳转）
     navbar2 = read("src-site/src/components/NavBar.tsx") or ""
     if navbar2:
-        check("NavBar: 流程为首页锚点 /#process",
-              'label: "流程"' in navbar2 and 'hash: "process"' in navbar2)
-        check("NavBar: 服务为首页锚点 /#services",
-              'label: "服务"' in navbar2 and 'hash: "services"' in navbar2)
+        check("NavBar: 评级流程为首页锚点 /#process",
+              'label: "评级流程"' in navbar2 and 'hash: "process"' in navbar2)
+        check("NavBar: 价值主张为首页锚点 /#services",
+              'label: "价值主张"' in navbar2 and 'hash: "services"' in navbar2)
         check("NavBar: 合作伙伴为首页锚点 /#partners",
               'label: "合作伙伴"' in navbar2 and 'hash: "partners"' in navbar2)
+        check("NavBar: 无指标申报菜单", "指标申报" not in navbar2)
     # Home: 支持 hash 锚点滚动
     home_src = read("src-site/src/pages/Home.tsx") or ""
     check("Home: hash 锚点滚动支持（useLocation + scrollIntoView）",
@@ -319,9 +319,10 @@ def t_src_site():
 
     navbar = read("src-site/src/components/NavBar.tsx")
     if navbar:
-        for kw in ["首页", "金融市场", "证书查询", "指标申报", "流程", "服务", "合作伙伴", "加入我们"]:
+        for kw in ["首页", "金融市场", "证书查询", "评级流程", "价值主张", "合作伙伴", "加入我们"]:
             check(f"NavBar 含菜单项: {kw}", kw in navbar)
         check("NavBar 无能源计算", "能源计算" not in navbar)
+        check("NavBar 无指标申报", "指标申报" not in navbar)
 
 
 # ============================================================
@@ -414,10 +415,11 @@ def t_visual_checklist():
     check("加入: 无深蓝到深绿渐变 hero header（改为白底）",
           'bg-gradient-to-r from-[#003366] to-[#1A5319] text-white py-12' not in join)
 
-    # ---- NavBar 8 项菜单 ----
-    for m in ["首页", "金融市场", "证书查询", "指标申报", "流程", "服务", "合作伙伴", "加入我们"]:
+    # ---- NavBar 7 项菜单 ----
+    for m in ["首页", "金融市场", "证书查询", "评级流程", "价值主张", "合作伙伴", "加入我们"]:
         check(f"NavBar: 菜单 {m}", m in navbar)
     check("NavBar: 无'能源计算'", "能源计算" not in navbar)
+    check("NavBar: 无'指标申报'", "指标申报" not in navbar)
     check("NavBar: 登录按钮金底深蓝字", "bg-[#D4AF37]" in navbar and "text-[#003366]" in navbar)
 
     # ---- Footer（uat ic 组件）----

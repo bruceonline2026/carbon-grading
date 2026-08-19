@@ -1,15 +1,14 @@
 import { Link } from "react-router-dom";
 import { enterpriseUrl } from "../config";
 
-/** 导航菜单项（与官网一致 8 项；无当前页高亮，hover 变色）
- * 流程/服务/合作伙伴为首页锚点（/#process /#services /#partners），不是独立页面 */
+/** 导航菜单项（7 项；无当前页高亮，hover 变色）
+ * 评级流程/价值主张/合作伙伴为首页锚点（/#process /#services /#partners），不是独立页面 */
 const NAV_ITEMS: { label: string; to?: string; hash?: string; external?: string; externalSelf?: boolean }[] = [
   { label: "首页", to: "/" },
   { label: "金融市场", to: "/financial-supermarket" },
   { label: "证书查询", to: "/certificate-query" },
-  { label: "指标申报", external: enterpriseUrl },
-  { label: "流程", to: "/", hash: "process" },
-  { label: "服务", to: "/", hash: "services" },
+  { label: "评级流程", to: "/", hash: "process" },
+  { label: "价值主张", to: "/", hash: "services" },
   { label: "合作伙伴", to: "/", hash: "partners" },
   { label: "加入我们", external: "/join-us/", externalSelf: true },
 ];
